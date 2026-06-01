@@ -1,0 +1,31 @@
+// 상단바
+
+import { Link } from 'react-router-dom';
+import { FiUser } from 'react-icons/fi';
+
+const Header = () => {
+    return (
+        <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
+            {/* 로고 */}
+            <Link to="/" className="text-purple-600 text-xl font-bold">
+                Stack Link
+            </Link>
+
+            {/* 검색바 */}
+            <input
+                type="text"
+                placeholder="프로젝트, 기술, 포지션, 키워드 검색으로 공고를 찾아보세요"
+                className="w-1/2 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-purple-500"
+            />
+
+            {/* 프로필 */}
+            <Link to="/mypage">
+                <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
+                    <FiUser size={18} className="text-purple-600" />
+                </div>
+            </Link>
+        </header>
+    );
+};
+
+export default Header;
