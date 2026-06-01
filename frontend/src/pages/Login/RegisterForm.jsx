@@ -16,6 +16,9 @@ const RegisterForm = () => {
         phoneNumber: '',
     });
 
+    // 선택한 포지션
+    const [selectedPositions, setSelectedPositions] = useState([]);
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -47,6 +50,15 @@ const RegisterForm = () => {
     const handleNicknameCheck = () => {
         // TODO: 백엔드 닉네임 중복 확인 API 필요
     };
+
+    const handlePositionChange = (position) => {
+        setSelectedPositions((prev) =>
+            prev.includes(position)
+                ? prev.filter((p) => p !== position)
+                : [...prev, position]
+        );
+    };
+
 
     return (
         <div className="w-80">
@@ -130,10 +142,21 @@ const RegisterForm = () => {
 
                 {/* 개발직군 아코디언 */}
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm">개발직군</label>
+                    <label className="text-sm">포지션</label>
                     <Accordion title="포지션 선택">
-                        {/* TODO: 백엔드 개발직군 필드 추가 필요 */}
-                        <p className="text-gray-400">포지션 목록 준비 중</p>
+                        <div className="flex flex-col gap-2">
+                            {['백엔드', '프론트엔드', 'PM', 'DB', '디자인'].map((position) => (
+                                <label key={position} className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        value={position}
+                                        checked={selectedPositions.includes(position)}
+                                        onChange={() => handlePositionChange(position)}
+                                    />
+                                    <span>{position}</span>
+                                </label>
+                            ))}
+                        </div>
                     </Accordion>
                 </div>
 
