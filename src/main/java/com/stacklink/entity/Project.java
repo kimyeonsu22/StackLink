@@ -17,4 +17,10 @@ public class Project {
     private Long id;
 
     private String title;
+
+    @Column(name="favorite_count")
+    private Integer favoriteCount;
+
+    @Column(name="view_count")
+    private Integer viewCount;
 }
