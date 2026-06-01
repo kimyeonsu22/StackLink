@@ -5,8 +5,8 @@ spring:
     port: 8080
   datasource:
     url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: root
+    password: "0000"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
