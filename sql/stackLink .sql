@@ -78,7 +78,7 @@ CREATE TABLE sub_state (
 
 CREATE TABLE project (
 	id	BIGINT	NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	user_id	BIGINT NOT NULL,
+    user_id	BIGINT NOT NULL UNIQUE, -- 프로젝트 공고는 한명당 하나씩, unique 제약조건
 	projectname	varchar(30)	NOT NULL,
 	content	TEXT	NOT NULL,
 	recruit_count	integer	NOT NULL,
@@ -139,6 +139,8 @@ CREATE TABLE reply (
 	parent_id	BIGINT	NULL	DEFAULT null	COMMENT '부모 댓글id 셀프 조인',
 	like_count	integer	NOT NULL	DEFAULT 0,
     is_deleted  boolean not null DEFAULT false,
+    created_at	DATETIME	NOT NULL, -- 댓글 생성일자 추가
+    updated_at	DATETIME	NULL, -- 댓글 수정일자 추가
     
     FOREIGN KEY(project_id) REFERENCES project(id) ON DELETE CASCADE,
     -- 사용자 정보 삭제 시 트리거와 is_deleted 컬럼으로 소프트 삭제
