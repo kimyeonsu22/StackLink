@@ -33,7 +33,7 @@ const ReplySection = ({ projectId }) => {
                             }}
                             className="flex items-center gap-1 text-gray-400 text-xs hover:text-red-400 transition w-fit"
                         >
-                            ❤️ {reply.likeCount}
+                            좋아요️ {reply.likeCount}
                         </button>
                     </div>
                 ))}

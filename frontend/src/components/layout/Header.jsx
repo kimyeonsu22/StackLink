@@ -3,6 +3,8 @@
 import { Link } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 
+const dummyNickname = '닉네임';
+
 const Header = () => {
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
@@ -18,12 +20,15 @@ const Header = () => {
                 className="w-1/2 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-purple-500"
             />
 
-            {/* 프로필 */}
-            <Link to="/mypage">
-                <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
-                    <FiUser size={18} className="text-purple-600" />
-                </div>
-            </Link>
+            {/* 우측 프로필*/}
+            <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{dummyNickname}</span>님</span>
+                <Link to="/mypage">
+                    <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
+                        <FiUser size={18} className="text-purple-600" />
+                    </div>
+                </Link>
+            </div>
         </header>
     );
 };
