@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,7 +29,6 @@ public class ProjectFavoriteService {
             return false;
         }
 
-//        ProjectFavorite favorite = ProjectFavorite.builder().id(id).build();
         User user = userRepository.getReferenceById(userId);
         Project project = projectRepository.getReferenceById(projectId);
 
@@ -35,5 +36,9 @@ public class ProjectFavoriteService {
 
         projectFavoriteRepository.save(favorite);
         return true;
+    }
+
+    public List<ProjectFavorite> getFavorite(Long userId) {
+        return projectFavoriteRepository.findByUser_Id(userId);
     }
 }
