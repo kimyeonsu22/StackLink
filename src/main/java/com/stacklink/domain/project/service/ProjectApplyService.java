@@ -1,11 +1,11 @@
 package com.stacklink.domain.project.service;
 
 
-import com.stacklink.dto.ApplyRequest;
+import com.stacklink.domain.project.dto.ApplyRequest;
 import com.stacklink.domain.project.entity.Project;
-import com.stacklink.entity.ProjectApply;
-import com.stacklink.entity.ProjectApplyId;
-import com.stacklink.repository.ProjectApplyRepository;
+import com.stacklink.domain.project.entity.ProjectApply;
+import com.stacklink.domain.project.entity.ProjectApplyId;
+import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ public class ProjectApplyService {
         this.projectRepository = projectRepository;
     }
 
+    // 공고 지원
     @Transactional
     public void applyProject(Long userId, Long projectId, ApplyRequest req) {
         // 공고 존재 확인
@@ -54,6 +55,7 @@ public class ProjectApplyService {
         projectApplyRepository.save(apply);
     }
 
+    // 지원 취소
     @Transactional
     public void cancelApply(Long userId, Long projectId, ApplyRequest req) {
         ProjectApplyId applyId = new ProjectApplyId(userId, projectId);

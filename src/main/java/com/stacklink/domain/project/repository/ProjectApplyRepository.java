@@ -1,7 +1,7 @@
-package com.stacklink.repository;
+package com.stacklink.domain.project.repository;
 
-import com.stacklink.entity.ProjectApply;
-import com.stacklink.entity.ProjectApplyId;
+import com.stacklink.domain.project.entity.ProjectApply;
+import com.stacklink.domain.project.entity.ProjectApplyId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectApplyRepository extends JpaRepository<ProjectApply,Long> {

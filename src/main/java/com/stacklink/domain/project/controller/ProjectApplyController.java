@@ -1,6 +1,6 @@
 package com.stacklink.domain.project.controller;
 
-import com.stacklink.dto.ApplyRequest;
+import com.stacklink.domain.project.dto.ApplyRequest;
 import com.stacklink.domain.project.service.ProjectApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
