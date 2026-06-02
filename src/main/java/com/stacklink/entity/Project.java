@@ -23,4 +23,8 @@ public class Project {
 
     @Column(name="view_count")
     private Integer viewCount;
+
+    @Column(name="is_closed")
+    private boolean isClosed;
+
 }
