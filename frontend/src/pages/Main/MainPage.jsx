@@ -37,7 +37,8 @@ const dummyStats = [
 
 const MainPage = () => {
     // TODO: 백엔드 인증 API 연동 후 실제 구독 여부로 교체
-    const isSubscribed = false;
+    // 현재 테스트 단계에선 해당 bool 로 구독 비구독 판별
+    const isSubscribed = true;
 
     return (
         <div className="flex flex-col h-screen bg-gray-50">
@@ -82,7 +83,9 @@ const MainPage = () => {
                 </main>
             </div>
 
-            <StatBar stats={dummyStats} />
+            <div className="pb-4">
+                <StatBar stats={dummyStats} />
+            </div>
         </div>
     );
 };
