@@ -1,12 +1,12 @@
-package com.stacklink.service;
+package com.stacklink.domain.project.service;
 
 
 import com.stacklink.dto.ApplyRequest;
-import com.stacklink.entity.Project;
+import com.stacklink.domain.project.entity.Project;
 import com.stacklink.entity.ProjectApply;
 import com.stacklink.entity.ProjectApplyId;
 import com.stacklink.repository.ProjectApplyRepository;
-import com.stacklink.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
