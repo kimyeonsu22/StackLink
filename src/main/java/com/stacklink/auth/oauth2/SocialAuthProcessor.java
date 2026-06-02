@@ -1,7 +1,7 @@
 package com.stacklink.auth.oauth2;
 
-import com.stacklink.domain.user.entity.*;
-import com.stacklink.domain.user.repository.*;
+import com.stacklink.domain.project.entity.*;
+import com.stacklink.domain.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

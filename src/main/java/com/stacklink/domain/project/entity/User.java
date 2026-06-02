@@ -1,4 +1,4 @@
-package com.stacklink.domain.user.entity;
+package com.stacklink.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

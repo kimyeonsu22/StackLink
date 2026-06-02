@@ -1,6 +1,6 @@
-package com.stacklink.domain.user.repository;
+package com.stacklink.domain.project.repository;
 
-import com.stacklink.domain.user.entity.User;
+import com.stacklink.domain.project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

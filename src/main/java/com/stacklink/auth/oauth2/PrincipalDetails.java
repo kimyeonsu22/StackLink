@@ -1,6 +1,6 @@
 package com.stacklink.auth.oauth2;
 
-import com.stacklink.domain.user.entity.User;
+import com.stacklink.domain.project.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

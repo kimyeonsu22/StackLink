@@ -1,0 +1,59 @@
+package com.stacklink.domain.project.entity;
+
+import com.stacklink.domain.project.entity.User;
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "project")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+public class Project {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 작성자(채용 회원)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User author;
+
+    @Column(name = "projectname", nullable = false, length = 30)
+    private String projectName;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
+
+    @Column(name = "recruit_count", nullable = false)
+    private int recruitCount;
+
+    @Column(name = "is_closed", nullable = false)
+    private boolean isClosed;
+
+    @Column(name = "view_count", nullable = false)
+    private int viewCount;
+
+    @Column(name = "favorite_count", nullable = false)
+    private int favoriteCount;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deadline_at", nullable = false)
+    private LocalDateTime deadlineAt;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+}

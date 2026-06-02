@@ -1,4 +1,4 @@
-package com.stacklink.domain.user.entity;
+package com.stacklink.domain.project.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

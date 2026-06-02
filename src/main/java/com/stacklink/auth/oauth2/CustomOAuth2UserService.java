@@ -1,6 +1,6 @@
 package com.stacklink.auth.oauth2;
 
-import com.stacklink.domain.user.entity.User;
+import com.stacklink.domain.project.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.*;
 import org.springframework.security.oauth2.core.user.OAuth2User;

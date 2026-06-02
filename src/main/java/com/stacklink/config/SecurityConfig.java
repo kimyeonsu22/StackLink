@@ -52,6 +52,7 @@ public class SecurityConfig {
                         // ★ 구체적 규칙을 일반 규칙보다 위에 배치 (apply가 POST 일반 규칙에 가려지지 않도록)
                         .requestMatchers(HttpMethod.POST, "/api/projects/*/apply")
                         .hasAnyRole("APPLICANT", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/projects/*/favorite").authenticated()
 
                         // 프로젝트 조회/검색은 비로그인 허용
                         .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()

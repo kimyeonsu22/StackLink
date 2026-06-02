@@ -1,6 +1,6 @@
 package com.stacklink.auth.dto;
 
-import com.stacklink.domain.user.entity.Role;
+import com.stacklink.domain.project.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 

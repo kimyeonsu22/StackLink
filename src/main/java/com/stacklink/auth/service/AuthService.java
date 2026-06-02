@@ -2,8 +2,8 @@ package com.stacklink.auth.service;
 
 import com.stacklink.auth.dto.*;
 import com.stacklink.auth.jwt.JwtTokenProvider;
-import com.stacklink.domain.user.entity.*;
-import com.stacklink.domain.user.repository.UserRepository;
+import com.stacklink.domain.project.entity.*;
+import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
