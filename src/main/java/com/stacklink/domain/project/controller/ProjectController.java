@@ -1,10 +1,10 @@
-package com.stacklink.controller;
+package com.stacklink.domain.project.controller;
 
-import com.stacklink.dto.ProjectCreateRequest;
-import com.stacklink.dto.ProjectResponse;
-import com.stacklink.dto.ProjectUpdateRequest;
-import com.stacklink.entity.Project;
-import com.stacklink.service.ProjectService;
+import com.stacklink.domain.project.dto.ProjectCreateRequest;
+import com.stacklink.domain.project.dto.ProjectResponse;
+import com.stacklink.domain.project.dto.ProjectUpdateRequest;
+import com.stacklink.domain.project.entity.Project;
+import com.stacklink.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.stacklink.dto;
+package com.stacklink.domain.project.dto;
 
 import lombok.Getter;
 import lombok.Setter;

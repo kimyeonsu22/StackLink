@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "project")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -24,6 +25,8 @@ public class Project {
 
     @Column(name = "projectname", nullable = false, length = 30)
     private String projectName;
+
+    private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;

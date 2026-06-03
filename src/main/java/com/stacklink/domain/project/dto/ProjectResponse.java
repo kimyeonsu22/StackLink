@@ -1,4 +1,4 @@
-package com.stacklink.dto;
+package com.stacklink.domain.project.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +12,8 @@ public class ProjectResponse {
     private Long id;
 
     private Long userId;
+
+    private String authorName;
 
     private String projectname;
 

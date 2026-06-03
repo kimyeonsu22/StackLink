@@ -1,10 +1,12 @@
-package com.stacklink.service;
+package com.stacklink.domain.project.service;
 
-import com.stacklink.dto.ProjectCreateRequest;
-import com.stacklink.dto.ProjectResponse;
-import com.stacklink.dto.ProjectUpdateRequest;
-import com.stacklink.entity.Project;
-import com.stacklink.repository.ProjectRepository;
+import com.stacklink.domain.project.dto.ProjectCreateRequest;
+import com.stacklink.domain.project.dto.ProjectResponse;
+import com.stacklink.domain.project.dto.ProjectUpdateRequest;
+import com.stacklink.domain.project.entity.Project;
+import com.stacklink.domain.project.entity.User;
+import com.stacklink.domain.project.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +20,18 @@ import java.util.List;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     // 생성
     public Long createProject(
             Long userId,
             ProjectCreateRequest request
     ) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 없음"));
 
         Project project = Project.builder()
-                .userId(userId)
-                .projectname(request.getProjectname())
+                .author(user)
+                .projectName(request.getProjectname())
                 .title(request.getTitle())
                 .content(request.getContent())
                 .recruitCount(request.getRecruitCount())
@@ -54,12 +58,12 @@ public class ProjectService {
 
         return ProjectResponse.builder()
                 .id(project.getId())
-                .userId(project.getUserId())
-                .projectname(project.getProjectname())
+                .userId(project.getAuthor().getId())
+                .projectname(project.getProjectName())
                 .title(project.getTitle())
                 .content(project.getContent())
                 .recruitCount(project.getRecruitCount())
-                .isClosed(project.getIsClosed())
+                .isClosed(project.isClosed())
                 .viewCount(project.getViewCount())
                 .favoriteCount(project.getFavoriteCount())
                 .deadlineAt(project.getDeadlineAt())
@@ -83,7 +87,7 @@ public class ProjectService {
                 .findByIdAndIsDeletedFalse(projectId)
                 .orElseThrow(() -> new RuntimeException("공고 없음"));
 
-        project.setProjectname(request.getProjectname());
+        project.setProjectName(request.getProjectname());
         project.setTitle(request.getTitle());
         project.setContent(request.getContent());
         project.setRecruitCount(request.getRecruitCount());
@@ -98,7 +102,7 @@ public class ProjectService {
                 .findByIdAndIsDeletedFalse(projectId)
                 .orElseThrow(() -> new RuntimeException("공고 없음"));
 
-        project.setIsDeleted(true);
+        project.setDeleted(true);
         project.setUpdatedAt(LocalDateTime.now());
     }
 }
