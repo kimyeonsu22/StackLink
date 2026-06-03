@@ -1,10 +1,14 @@
 import {useState} from "react";
-import PositionRadioOption from "../common/PositionRadioOption.jsx";
-import SelfIntroduction from "../common/SelfIntroduction.jsx";
+import PositionRadioOption from "./PositionRadioOption.jsx";
+import SelfIntroduction from "./SelfIntroduction.jsx";
+import ApplySuccessModal from "./ApplySuccessModal.jsx";
+import ApplyFailModal from "./ApplyFailModal.jsx";
 
-const ProjectApplyForm = ({id}) => {
+const ProjectApplyForm = ({projectId}) => {
     const [selectedPositions, setSelectedPositions] = useState('');
     const [selfIntroduction, setSelfIntroduction] = useState('');
+    const [successModal, setSuccessModal] = useState('hidden');
+    const [failModal, setFailModal] = useState('hidden');
 
     const handlePositionChange = (e) => {
         setSelectedPositions(e.target.value);
@@ -18,30 +22,36 @@ const ProjectApplyForm = ({id}) => {
     const handleApply = () => {
         // selectedPositions, selfIntroduction, id 값, 현재 시간을 포함하는 데이터를 형성하여 백엔드로 요청
         const data = {
-            positions: selectedPositions,
-            selfIntroduction: selfIntroduction,
-            projectId: id,
-            applyTime: new Date().toISOString()
+            position: selectedPositions,
+            content: selfIntroduction,
+            projectId: projectId,
         };
 
+        console.log("요청 확인용 로그")
+
         // 임시 URI 지정
-        fetch('/api/projects/apply', {
+        fetch(`/api/projects/${projectId}/apply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         }).then(response => {
-            // 프로젝트 지원에 성공했을 경우 지원 성공 모달 출력 후 상세 페이지로 이동
-            if (response.ok) {
-                // 지원 성공 모달 컴포넌트 출력
-
-
+            /* response.status == 200 인 경우 ApplySuccessModal 컴포넌트를 호출하고
+             response.status == 401 인 경우 ApplyFailModal 컴포넌트를 호출한다.
+             */
+            if (response.status === 200) {
+                setSuccessModal('block');
+            } else if (response.status === 401) {
+                setFailModal('block');
             }
+
+
         }).catch(
-            // 이미 지원한 프로젝트인 경우
+            // 이미 지원한 프로젝트이거나 지원이 마감된 경우
             error => {
-                console.error('Error applying for the project:', error);
+                console.error('Error:', error);
+                // document.getElementById('applyFail').className = 'block';
             }
         )
     }
@@ -50,6 +60,16 @@ const ProjectApplyForm = ({id}) => {
 
 
         <div>
+            {/* 지원 성공시 모달 출력 */}
+            <div className={successModal}>
+                <ApplySuccessModal displayOption={successModal}></ApplySuccessModal>
+            </div>
+
+            <div className={failModal}>
+                <ApplyFailModal displayOption={failModal}></ApplyFailModal>
+            </div>
+            {/* 지원 실패시 모달 출력 */}
+
 
             {/* 한 줄 소개 컴포넌트*/}
             <div className="bg-white rounded-xl p-5 border border-gray-200">

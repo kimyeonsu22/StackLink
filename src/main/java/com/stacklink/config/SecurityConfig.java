@@ -51,10 +51,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // 프로젝트 조회 허용
-                        .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projects/**").permitAll()
 
                         // 프로젝트 생성/수정/삭제 허용 (테스트용)
-                        .requestMatchers("/projects/**").permitAll()
+                        .requestMatchers("/api/projects/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

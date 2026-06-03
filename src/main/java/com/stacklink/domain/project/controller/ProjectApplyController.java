@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.PrincipalMethodArgu
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 public class ProjectApplyController {
     private final ProjectApplyService projectApplyService;
 
@@ -25,6 +25,8 @@ public class ProjectApplyController {
 
     // 공고 지원
     @PostMapping("/{projectId}/apply")
+    public ResponseEntity<String> apply(@PathVariable Long projectId, @RequestBody ApplyRequest req) {
+        Long userId = 1L; // 임시로 userId 설정
     public ResponseEntity<String> apply(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long projectId, @RequestBody ApplyRequest req) {
         Long userId = principalDetails.getUser().getId();
 
