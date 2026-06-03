@@ -2,7 +2,7 @@
 
 const PositionRadioOption = ({name, id, value, selectedPositions, onChange, children}) => {
     return (
-        <div>
+        <div className="flex justify-center items-center">
             <input type="radio" id={id} name={name} value={value}
             checked={selectedPositions.includes(value)}
             onChange={onChange}/>

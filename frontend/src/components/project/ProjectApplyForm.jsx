@@ -15,7 +15,36 @@ const ProjectApplyForm = ({id}) => {
     }
 
     // 지원하기 버튼 클릭시 동작시킬 백엔드 API 호출
+    const handleApply = () => {
+        // selectedPositions, selfIntroduction, id 값, 현재 시간을 포함하는 데이터를 형성하여 백엔드로 요청
+        const data = {
+            positions: selectedPositions,
+            selfIntroduction: selfIntroduction,
+            projectId: id,
+            applyTime: new Date().toISOString()
+        };
 
+        // 임시 URI 지정
+        fetch('/api/projects/apply', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            // 프로젝트 지원에 성공했을 경우 지원 성공 모달 출력 후 상세 페이지로 이동
+            if (response.ok) {
+                // 지원 성공 모달 컴포넌트 출력
+
+
+            }
+        }).catch(
+            // 이미 지원한 프로젝트인 경우
+            error => {
+                console.error('Error applying for the project:', error);
+            }
+        )
+    }
 
     return (
 
@@ -23,7 +52,7 @@ const ProjectApplyForm = ({id}) => {
         <div>
 
             {/* 한 줄 소개 컴포넌트*/}
-            <div>
+            <div className="bg-white rounded-xl p-5 border border-gray-200">
                 <SelfIntroduction id="selfintroduction" name="selfintroduction"
                                   placeholder="간단한 자기소개를 입력해주세요." onChange={handleSelfIntroductionChange}>
 
@@ -31,7 +60,7 @@ const ProjectApplyForm = ({id}) => {
             </div>
 
             {/*포지션 선택 radio option*/}
-            <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <div className="flex bg-white rounded-xl p-5 border border-gray-200 gap-22">
                 <PositionRadioOption name="position" id="backend" value="backend"
                                      selectedPositions={selectedPositions} onChange={handlePositionChange}>
                     백엔드 개발
@@ -56,6 +85,27 @@ const ProjectApplyForm = ({id}) => {
                                      selectedPositions={selectedPositions} onChange={handlePositionChange}>
                     디자인
                 </PositionRadioOption>
+            </div>
+
+            {/* 지원하기 및 뒤로가기 버튼*/}
+            <div className="flex justify-end gap-4 mt-4">
+                <button className="bg-violet-300 rounded-xl w-md h-15 text-amber-50 hover:bg-violet-500 border-gray-200
+                         active:translate-y-[5px]" onClick={handleApply}>
+
+                    {/*버튼 글자 바로 왼쪽에 아이콘 붙이기*/}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 2 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 inline-block">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    지원하기
+                </button>
+                <button className="bg-red-500 rounded-xl w-md h-15 text-amber-50 hover:bg-red-700 border-gray-200
+                         active:translate-y-[5px]" onClick={() => window.history.back()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 2 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 inline-block">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
+                    뒤로가기
+                </button>
             </div>
         </div>
 
