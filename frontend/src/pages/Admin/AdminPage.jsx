@@ -14,7 +14,7 @@ const adminMenus = [
 ];
 
 const PROJECT_PAGE_SIZE = 5;
-const MEMBER_PAGE_SIZE = 5;
+const MEMBER_PAGE_SIZE = 7;
 
 const AdminPage = () => {
   const [projectPage, setProjectPage] = useState(1);
@@ -183,7 +183,7 @@ const AdminPage = () => {
               </button>
             </div>
 
-            <ProjectInfo project={selectedProject} showFollow={false} />
+            <ProjectInfo project={selectedProject} />
             <ProjectContent project={selectedProject} />
 
             <button

@@ -330,6 +330,7 @@ export const favoriteProjects = projects.filter(p => [3, 6, 7].includes(p.id));
 export const applicants = [
   {
     id: 2,
+    projectId: 1,
     nickname: '이수연',
     username: '이수연',
     phoneNumber: '010-2345-6789',
@@ -348,6 +349,7 @@ export const applicants = [
   },
   {
     id: 4,
+    projectId: 1,
     nickname: '최민준',
     username: '최민준',
     phoneNumber: '010-4567-8901',
@@ -364,6 +366,7 @@ export const applicants = [
   },
   {
     id: 8,
+    projectId: 1,
     nickname: '강태양',
     username: '강태양',
     phoneNumber: '010-8901-2345',
@@ -380,6 +383,7 @@ export const applicants = [
   },
   {
     id: 10,
+    projectId: 1,
     nickname: '임재현',
     username: '임재현',
     phoneNumber: '010-0123-4567',
@@ -396,6 +400,7 @@ export const applicants = [
   },
   {
     id: 6,
+    projectId: 1,
     nickname: '한동훈',
     username: '한동훈',
     phoneNumber: '010-6789-0123',
@@ -410,6 +415,12 @@ export const applicants = [
     appliedAt: '2026.05.17',
     isApproved: false,
   },
+];
+
+// ===== 댓글 더미데이터 (reply 테이블 기준) =====
+export const replies = [
+  { id: 1, projectId: 1, author: '김철수', content: '좋은 프로젝트네요!', likeCount: 3, createdAt: '2026.05.01' },
+  { id: 2, projectId: 1, author: '이영희', content: '지원해보고 싶어요.', likeCount: 1, createdAt: '2026.05.02' },
 ];
 
 // ===== 메인페이지 통계 (별도 통계 API 응답 기준) =====

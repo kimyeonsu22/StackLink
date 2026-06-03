@@ -1,5 +1,6 @@
 // 프로젝트 상세 페이지
 
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -8,14 +9,18 @@ import ProjectContent from '../../components/project/ProjectContent';
 import ReplySection from '../../components/project/ReplySection';
 import TeamLeaderCard from '../../components/project/TeamLeaderCard';
 import HotProjects from '../../components/project/HotProjects';
-import { projects, members, hotProjects, currentUser } from '../../data/dummy';
+import { projects, members, hotProjects, currentUser, applicants } from '../../data/dummy';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
 
-  const project = projects.find(p => p.id === Number(id)) ?? projects[0];
+  const project = projects.find(p => p.id === Number(id));
+  if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
+
   const leader = members.find(m => m.nickname === project.author) ?? members[0];
+  const applyCount = applicants.filter(a => a.projectId === project.id).length;
 
   // TODO: 백엔드 인증 연동 후 JWT에서 추출한 실제 유저 정보로 교체
   const isOwner = currentUser.nickname === project.author;
@@ -31,6 +36,7 @@ const ProjectDetailPage = () => {
 
   const handleLike = () => {
     // TODO: 백엔드 /api/projects/:id/favorite 연동 필요
+    setIsLiked((prev) => !prev);
   };
 
   return (
@@ -52,7 +58,7 @@ const ProjectDetailPage = () => {
                 </button>
 
                 <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <ProjectInfo project={project} />
+                  <ProjectInfo project={project} applyCount={applyCount} />
                 </div>
 
                 <ProjectContent project={project} />
@@ -86,9 +92,13 @@ const ProjectDetailPage = () => {
                     </button>
                     <button
                       onClick={handleLike}
-                      className="w-full bg-white text-gray-700 font-semibold py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition"
+                      className={`w-full font-semibold py-3 rounded-xl border transition ${
+                        isLiked
+                          ? 'bg-purple-50 text-purple-600 border-purple-300'
+                          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                      }`}
                     >
-                      좋아요
+                      {isLiked ? '좋아요 ♥' : '좋아요 ♡'}
                     </button>
                   </>
                 )}

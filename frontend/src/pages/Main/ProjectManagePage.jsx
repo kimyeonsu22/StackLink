@@ -12,11 +12,15 @@ const PAGE_SIZE = 6;
 
 const ProjectManagePage = () => {
   const { id } = useParams();
-  const [applicants, setApplicants] = useState(initialApplicants);
+  // TODO: 백엔드 지원자 목록 API 연동 후 교체
+  const [applicants, setApplicants] = useState(
+    initialApplicants.filter(a => a.projectId === Number(id))
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
-  const project = projects.find(p => p.id === Number(id)) ?? projects[0];
+  const project = projects.find(p => p.id === Number(id));
+  if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
 
   const pendingApplicants = applicants.filter((a) => !a.isApproved);
   const approvedApplicants = applicants.filter((a) => a.isApproved);

@@ -16,7 +16,7 @@ const ProjectListCard = ({ project }) => {
                 <span>{project.position}</span>
                 <span>{project.recruitCount}명</span>
                 <span>~{project.deadline}</span>
-                <span className="ml-auto">❤️ {project.favoriteCount}</span>
+                <span className="ml-auto">좋아요️ {project.favoriteCount}</span>
             </div>
 
             <div className="flex flex-wrap gap-1">

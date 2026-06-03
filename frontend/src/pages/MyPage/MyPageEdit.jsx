@@ -5,45 +5,29 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Accordion from '../../components/common/Accordion';
-
-const TECH_LIST = [
-  'JAVA', 'Spring Boot', 'Spring Security', 'JPA', 'QueryDSL',
-  'SQL/RDBMS', 'NoSQL', 'C++', 'C#', 'Embedded',
-  'HTML5', 'CSS3', 'JavaScript', 'TypeScript',
-  'React.js', 'Vue.js', 'Kotlin', 'Swift'
-];
-
-const CAREER_LIST = [
-  '1년 미만', '1년 이상 ~ 3년 미만', '3년 이상 ~ 5년 미만',
-  '5년 이상 ~ 7년 미만', '7년 이상 ~ 10년 미만', '10년 이상'
-];
-
-const POSITION_LIST = ['백엔드', '프론트엔드', 'PM', 'DB', '디자인'];
-
+import TechStackSelector from '../../components/common/TechStackSelector';
+import InputField from '../../components/common/InputField';
 // TODO: 백엔드 API 연동 후 실제 유저 데이터로 교체
 import { currentUser } from '../../data/dummy';
 
+const POSITION_LIST = ['백엔드', '프론트엔드', 'PM', 'DB', '디자인'];
+
 const MyPageEdit = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState(currentUser.username);
   const [nickname, setNickname] = useState(currentUser.nickname);
+  const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [position, setPosition] = useState(currentUser.position);
   const [selectedTechs, setSelectedTechs] = useState(currentUser.techStack);
 
-  const handleTechCheck = (tech) => {
-    setSelectedTechs((prev) => {
-      if (prev[tech] !== undefined) {
-        const updated = { ...prev };
-        delete updated[tech];
-        return updated;
-      }
-      return { ...prev, [tech]: '' };
-    });
+  const handleNicknameCheck = () => {
+    // TODO: 백엔드 닉네임 중복 확인 API 필요
   };
 
-  const handleCareerSelect = (tech, career) => {
-    setSelectedTechs((prev) => ({ ...prev, [tech]: career }));
+  const handlePhoneCheck = () => {
+    // TODO: 백엔드 전화번호 중복 확인 API 필요
   };
 
   const handleSubmit = (e) => {
@@ -53,7 +37,7 @@ const MyPageEdit = () => {
       return;
     }
     // TODO: 백엔드 회원정보 수정 API 연동 필요
-    console.log({ nickname, password, position, selectedTechs });
+    console.log({ username, nickname, phoneNumber, password, position, selectedTechs });
   };
 
   return (
@@ -70,16 +54,51 @@ const MyPageEdit = () => {
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                  {/* 닉네임 */}
+                  {/* 이름 */}
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm text-gray-700">닉네임</label>
+                    <label className="text-sm text-gray-700">이름</label>
                     <input
                         type="text"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
                     />
                   </div>
+
+                  {/* 닉네임 */}
+                  <InputField
+                      label="닉네임"
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      rightButton={
+                          <button
+                              type="button"
+                              onClick={handleNicknameCheck}
+                              className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
+                          >
+                              중복 확인
+                          </button>
+                      }
+                  />
+
+                  {/* 전화번호 */}
+                  <InputField
+                      label="전화번호"
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="010-1234-5678"
+                      rightButton={
+                          <button
+                              type="button"
+                              onClick={handlePhoneCheck}
+                              className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
+                          >
+                              중복 확인
+                          </button>
+                      }
+                  />
 
                   {/* 비밀번호 */}
                   <div className="flex flex-col gap-1">
@@ -130,32 +149,10 @@ const MyPageEdit = () => {
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-700">기술스택</label>
                     <Accordion title="기술스택 선택">
-                      <div className="flex flex-col gap-3">
-                        {TECH_LIST.map((tech) => (
-                            <div key={tech} className="flex flex-col gap-1">
-                              <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedTechs[tech] !== undefined}
-                                    onChange={() => handleTechCheck(tech)}
-                                />
-                                <span className="text-sm">{tech}</span>
-                              </label>
-                              {selectedTechs[tech] !== undefined && (
-                                  <select
-                                      value={selectedTechs[tech]}
-                                      onChange={(e) => handleCareerSelect(tech, e.target.value)}
-                                      className="ml-6 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-purple-500"
-                                  >
-                                    <option value="">경력 선택</option>
-                                    {CAREER_LIST.map((career) => (
-                                        <option key={career} value={career}>{career}</option>
-                                    ))}
-                                  </select>
-                              )}
-                            </div>
-                        ))}
-                      </div>
+                      <TechStackSelector
+                          selectedTechs={selectedTechs}
+                          onChange={setSelectedTechs}
+                      />
                     </Accordion>
                   </div>
 

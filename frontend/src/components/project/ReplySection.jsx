@@ -1,13 +1,12 @@
 // 댓글
 import { useState } from 'react';
+import { replies as allReplies } from '../../data/dummy';
 
 const ReplySection = ({ projectId }) => {
     const [comment, setComment] = useState('');
 
-    const dummyReplies = [
-        { id: 1, author: '김철수', content: '좋은 프로젝트네요!', likeCount: 3, createdAt: '2024-05-01' },
-        { id: 2, author: '이영희', content: '지원해보고 싶어요.', likeCount: 1, createdAt: '2024-05-02' },
-    ];
+    // TODO: 백엔드 댓글 목록 API 연동 후 교체
+    const dummyReplies = allReplies.filter(r => r.projectId === Number(projectId));
 
     const handleSubmit = (e) => {
         e.preventDefault();
