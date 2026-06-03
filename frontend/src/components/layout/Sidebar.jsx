@@ -11,12 +11,13 @@ const menus = [
     { label: '프리미엄', icon: <FiStar />, path: '/subscription' },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ menus: customMenus }) => {
     const location = useLocation();
+    const menuList = customMenus ?? menus;
 
     return (
         <aside className="w-48 min-h-screen bg-white border-r border-gray-200 py-6 flex flex-col gap-1">
-            {menus.map((menu) => (
+            {menuList.map((menu) => (
                 <Link
                     key={menu.label}
                     to={menu.path}
