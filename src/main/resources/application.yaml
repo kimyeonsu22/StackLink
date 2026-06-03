@@ -74,3 +74,10 @@ logging:
           descriptor:
             sql: TRACE
     org.springframework.web: DEBUG
+
+
+
+jwt:
+  secret: mySecretKeyMySecretKeyMySecretKeyMySecretKey123456789
+  access-token-validity: 3600000
+  refresh-token-validity: 1209600000
