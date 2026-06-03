@@ -21,19 +21,15 @@ const CAREER_LIST = [
 const POSITION_LIST = ['백엔드', '프론트엔드', 'PM', 'DB', '디자인'];
 
 // TODO: 백엔드 API 연동 후 실제 유저 데이터로 교체
-const dummyUser = {
-  nickname: '닉네임',
-  position: '프론트엔드',
-  selectedTechs: { 'React.js': '1년 미만', 'TypeScript': '1년 미만' },
-};
+import { currentUser } from '../../data/dummy';
 
 const MyPageEdit = () => {
   const navigate = useNavigate();
-  const [nickname, setNickname] = useState(dummyUser.nickname);
+  const [nickname, setNickname] = useState(currentUser.nickname);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [position, setPosition] = useState(dummyUser.position);
-  const [selectedTechs, setSelectedTechs] = useState(dummyUser.selectedTechs);
+  const [position, setPosition] = useState(currentUser.position);
+  const [selectedTechs, setSelectedTechs] = useState(currentUser.techStack);
 
   const handleTechCheck = (tech) => {
     setSelectedTechs((prev) => {
