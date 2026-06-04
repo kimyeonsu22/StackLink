@@ -4,12 +4,10 @@ import com.stacklink.auth.oauth2.PrincipalDetails;
 import com.stacklink.domain.project.dto.ApplyRequest;
 import com.stacklink.domain.project.dto.ProjectApplyResponse;
 import com.stacklink.domain.project.service.ProjectApplyService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.PrincipalMethodArgumentResolver;
 
 import java.util.List;
 
@@ -25,11 +23,18 @@ public class ProjectApplyController {
 
     // 공고 지원
     @PostMapping("/{projectId}/apply")
-    public ResponseEntity<String> apply(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long projectId, @RequestBody ApplyRequest req) {
+    public ResponseEntity<String> apply(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                        @PathVariable Long projectId,
+                                        @RequestBody ApplyRequest req) {
         Long userId = principalDetails.getUser().getId();
 
-        projectApplyService.applyProject(userId, projectId, req);
-        return ResponseEntity.ok("지원 완료");
+        try{
+            projectApplyService.applyProject(userId, projectId, req);
+            return ResponseEntity.ok("지원 완료");
+        } catch (IllegalStateException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     // 공고 지원자 목록 조회
