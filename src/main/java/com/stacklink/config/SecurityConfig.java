@@ -52,7 +52,6 @@ public class SecurityConfig {
 
                         // 프로젝트 조회 허용
                         .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projects/**").permitAll()
 
                         // 프로젝트 생성/수정/삭제 허용 (테스트용)
                         .requestMatchers("/api/projects/**").permitAll()
