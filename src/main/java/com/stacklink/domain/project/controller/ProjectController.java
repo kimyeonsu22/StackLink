@@ -58,4 +58,7 @@ public class ProjectController {
         return projectService.getHotProjects();
     }
 
+    // 통계 (전체 공고수, 모집중, 지원자 수, 매칭률)
+
+
 }

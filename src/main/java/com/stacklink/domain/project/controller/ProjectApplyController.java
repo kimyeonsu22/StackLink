@@ -37,6 +37,20 @@ public class ProjectApplyController {
 
     }
 
+    // 공고 지원 취소
+    @DeleteMapping("/{projectId}/apply")
+    public ResponseEntity<String> cancelApply(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                              @PathVariable Long projectId) {
+        Long userId = principalDetails.getUser().getId();
+
+        try{
+            projectApplyService.cancelApply(userId, projectId);
+            return ResponseEntity.ok("지원 취소 완료");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     // 공고 지원자 목록 조회
     @GetMapping("/{projectId}/applications")
     public ResponseEntity<List<ProjectApplyResponse>> getApplicants(@PathVariable Long projectId){
