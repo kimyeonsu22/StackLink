@@ -33,7 +33,6 @@ public class ProjectService {
         Project project = Project.builder()
                 .author(user)
                 .projectName(request.getProjectname())
-                .title(request.getTitle())
                 .content(request.getContent())
                 .recruitCount(request.getRecruitCount())
                 .deadlineAt(request.getDeadlineAt())
@@ -61,7 +60,6 @@ public class ProjectService {
                 .id(project.getId())
                 .userId(project.getAuthor().getId())
                 .projectname(project.getProjectName())
-                .title(project.getTitle())
                 .content(project.getContent())
                 .recruitCount(project.getRecruitCount())
                 .isClosed(project.isClosed())
@@ -89,7 +87,6 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("공고 없음"));
 
         project.setProjectName(request.getProjectname());
-        project.setTitle(request.getTitle());
         project.setContent(request.getContent());
         project.setRecruitCount(request.getRecruitCount());
         project.setDeadlineAt(request.getDeadlineAt());

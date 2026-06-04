@@ -15,9 +15,6 @@ public class AiMatchingResponse {
     // 프로젝트 이름
     private String projectName;
 
-    // 프로젝트 제목
-    private String title;
-
     // 프로젝트 내용
     private String content;
 

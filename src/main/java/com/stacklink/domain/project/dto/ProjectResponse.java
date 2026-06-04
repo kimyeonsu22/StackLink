@@ -18,7 +18,6 @@ public class ProjectResponse {
 
     private String projectname;
 
-    private String title;
 
     private String content;
 

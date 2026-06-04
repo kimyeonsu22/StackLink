@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS stacklink;
 CREATE DATABASE stacklink;
 USE stacklink;
 

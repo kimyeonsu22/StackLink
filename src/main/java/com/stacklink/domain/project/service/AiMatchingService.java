@@ -59,7 +59,7 @@ public class AiMatchingService {
         sb.append("현재 모집 중인 프로젝트 목록:\n");
         for (Project p : projects) {
             sb.append("- ID: ").append(p.getId())
-                    .append(", 제목: ").append(p.getTitle())
+                    .append(", 프로젝트명: ").append(p.getProjectName())
                     .append(", 내용: ").append(p.getContent()).append("\n");
         }
         sb.append("\n위 사용자에게 가장 적합한 프로젝트 3개를 추천해줘. ");
@@ -119,7 +119,6 @@ public class AiMatchingService {
                         .ifPresent(p -> result.add(AiMatchingResponse.builder()
                                 .projectId(p.getId())
                                 .projectName(p.getProjectName())
-                                .title(p.getTitle())
                                 .content(p.getContent())
                                 .reason(reason)
                                 .score(score)

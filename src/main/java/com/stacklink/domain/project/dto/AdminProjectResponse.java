@@ -12,7 +12,6 @@ public class AdminProjectResponse {
     private Long id;
     private String authorNickname;
     private String projectName;
-    private String title;
     private String content;
     private Integer recruitCount;
     private Boolean isClosed;
@@ -27,7 +26,6 @@ public class AdminProjectResponse {
                 .id(p.getId())
                 .authorNickname(p.getAuthor() != null ? p.getAuthor().getNickname() : "-")
                 .projectName(p.getProjectName())
-                .title(p.getTitle())
                 .content(p.getContent())
                 .recruitCount(p.getRecruitCount())
                 .isClosed(p.isClosed())

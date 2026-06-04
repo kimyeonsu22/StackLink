@@ -11,8 +11,6 @@ public class ProjectUpdateRequest {
 
     private String projectname;
 
-    private String title;
-
     private String content;
 
     private Integer recruitCount;

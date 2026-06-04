@@ -21,4 +21,4 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `multiQuery_projectUpdate_trigger` AFT
 	END IF;
 END$$
 
-DELIMITER;
+DELIMITER ;
