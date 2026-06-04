@@ -1,5 +1,5 @@
 
-const ApplyFailModal = ({displayOption, isOpen, onClose}) => {
+const ApplyFailModal = ({displayOption, resText}) => {
 
     // x 버튼, 확인 버튼 클릭 시 모달 hidden 처리 함수
     const toggleModal = () => {
@@ -18,7 +18,7 @@ const ApplyFailModal = ({displayOption, isOpen, onClose}) => {
 
                 <h2 className="text-xl font-bold mb-4">지원 실패</h2>
                 <p className="text-gray-600 mb-6">
-                    이미 지원하셨거나 모집이 마감된 프로젝트 입니다.
+                    {resText}
                 </p>
 
                 {/* 하단 버튼 영역 */}
