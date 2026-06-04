@@ -31,3 +31,7 @@ export const getApplicants = (projectId) =>
 // 지원자 팀원으로 승인
 export const acceptApplicant = (projectId, userId) =>
     api.post(`/projects/${projectId}/members/${userId}`);
+
+// 내가 올린 공고 목록
+export const getMyProjects = () =>
+    api.get('/projects/my');

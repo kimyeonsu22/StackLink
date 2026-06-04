@@ -1,5 +1,6 @@
 package com.stacklink.domain.project.service;
 
+import com.stacklink.domain.project.dto.FavoriteProjectResponse;
 import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.entity.ProjectFavorite;
 import com.stacklink.domain.project.entity.ProjectFavoriteId;
@@ -38,7 +39,11 @@ public class ProjectFavoriteService {
         return true;
     }
 
-    public List<ProjectFavorite> getFavorite(Long userId) {
-        return projectFavoriteRepository.findByUser_Id(userId);
+    // 마이페이지에서 유저가 좋아요한 공고 보여주기 위해
+    public List<FavoriteProjectResponse> getFavorite(Long userId) {
+        return projectFavoriteRepository.findByUser_Id(userId)
+                .stream()
+                .map(FavoriteProjectResponse::from)
+                .toList();
     }
 }

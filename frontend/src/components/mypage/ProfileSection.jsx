@@ -3,22 +3,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FollowModal from './FollowModal';
+import { getFollowerList, getFollowingList } from '../../api/follow';
 
 const ProfileSection = ({ user }) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState(null); // 'follower' | 'following' | null
+    const [followerList, setFollowerList] = useState([]);
+    const [followingList, setFollowingList] = useState([]);
 
-    // TODO: 백엔드 팔로워/팔로잉 목록 API 연동 필요
-    const dummyFollowers = [
-        { id: 1, nickname: '김철수', position: '프론트엔드' },
-        { id: 2, nickname: '이영희', position: '백엔드' },
-        { id: 3, nickname: '박지훈', position: 'PM' },
-    ];
-
-    const dummyFollowing = [
-        { id: 1, nickname: '최민준', position: '백엔드' },
-        { id: 2, nickname: '정수연', position: '디자인' },
-    ];
+    const handleOpenModal = async (type) => {
+        try {
+            if (type === 'follower') {
+                const res = await getFollowerList(user.id);
+                setFollowerList(res.data);
+            } else {
+                const res = await getFollowingList(user.id);
+                setFollowingList(res.data);
+            }
+            setModal(type);
+        } catch (err) {
+            console.error('팔로우 목록 조회 실패', err);
+        }
+    };
 
     return (
         <div className="bg-white border border-gray-200 rounded-xl p-6 flex items-center gap-8">
@@ -30,30 +36,23 @@ const ProfileSection = ({ user }) => {
                 <p className="font-bold text-gray-900 text-lg">{user.nickname}</p>
                 <p className="text-sm text-gray-500">{user.username}</p>
                 <p className="text-sm text-gray-500">{user.email}</p>
-                <div className="flex flex-wrap gap-1 mt-1">
-                    {Object.entries(user.techStack || {}).map(([tech, career]) => (
-                        <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
-                            {tech} · {career}
-                        </span>
-                    ))}
-                </div>
                 <p className="text-xs text-gray-400 mt-1">{user.position}</p>
             </div>
 
             {/* 팔로워/팔로잉 */}
             <div className="flex gap-6">
                 <button
-                    onClick={() => setModal('follower')}
+                    onClick={() => handleOpenModal('follower')}
                     className="flex flex-col items-center hover:opacity-80 transition"
                 >
-                    <span className="text-2xl font-bold text-gray-900">{dummyFollowers.length}</span>
+                    <span className="text-2xl font-bold text-gray-900">{user.followerCount}</span>
                     <span className="text-xs text-gray-400">팔로워</span>
                 </button>
                 <button
-                    onClick={() => setModal('following')}
+                    onClick={() => handleOpenModal('following')}
                     className="flex flex-col items-center hover:opacity-80 transition"
                 >
-                    <span className="text-2xl font-bold text-gray-900">{dummyFollowing.length}</span>
+                    <span className="text-2xl font-bold text-gray-900">{user.followingCount}</span>
                     <span className="text-xs text-gray-400">팔로잉</span>
                 </button>
             </div>
@@ -70,7 +69,7 @@ const ProfileSection = ({ user }) => {
             {modal === 'follower' && (
                 <FollowModal
                     title="팔로워"
-                    list={dummyFollowers}
+                    list={followerList}
                     onClose={() => setModal(null)}
                 />
             )}
@@ -79,7 +78,7 @@ const ProfileSection = ({ user }) => {
             {modal === 'following' && (
                 <FollowModal
                     title="팔로잉"
-                    list={dummyFollowing}
+                    list={followingList}
                     onClose={() => setModal(null)}
                 />
             )}

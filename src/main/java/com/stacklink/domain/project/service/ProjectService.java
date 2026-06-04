@@ -104,6 +104,25 @@ public class ProjectService {
         project.setUpdatedAt(LocalDateTime.now());
     }
 
+    // 내가 올린 공고 목록
+    @Transactional(readOnly = true)
+    public List<ProjectResponse> getMyProjects(Long userId) {
+        return projectRepository.findByAuthor_IdAndIsDeletedFalse(userId)
+                .stream()
+                .map(p -> ProjectResponse.builder()
+                        .id(p.getId())
+                        .userId(p.getAuthor().getId())
+                        .projectname(p.getProjectName())
+                        .content(p.getContent())
+                        .recruitCount(p.getRecruitCount())
+                        .isClosed(p.isClosed())
+                        .viewCount(p.getViewCount())
+                        .favoriteCount(p.getFavoriteCount())
+                        .deadlineAt(p.getDeadlineAt())
+                        .build())
+                .toList();
+    }
+
     // 핫한 공고 Top 5
     @Transactional(readOnly = true)
     public List<ProjectResponse> getHotProjects(){

@@ -1,12 +1,11 @@
 package com.stacklink.domain.project.controller;
 
-import com.stacklink.auth.oauth2.PrincipalDetails;
 import com.stacklink.domain.project.dto.ApplyRequest;
 import com.stacklink.domain.project.dto.ProjectApplyResponse;
 import com.stacklink.domain.project.service.ProjectApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,11 +21,12 @@ public class ProjectApplyController {
     }
 
     // 공고 지원
+    // 일단 jwt 토큰 방식 인증 방식으로 수정
     @PostMapping("/{projectId}/apply")
-    public ResponseEntity<String> apply(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<String> apply(Authentication authentication,
                                         @PathVariable Long projectId,
                                         @RequestBody ApplyRequest req) {
-        Long userId = principalDetails.getUser().getId();
+        Long userId = Long.valueOf(authentication.getName());
 
         try{
             projectApplyService.applyProject(userId, projectId, req);
@@ -44,9 +44,10 @@ public class ProjectApplyController {
     }
 
     // 지원자 선택
+    // 일단 jwt 토큰 방식 인증 방식으로 수정
     @PostMapping("/{projectId}/members/{userId}")
-    public ResponseEntity<String> acceptApplicant(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long projectId, @PathVariable Long userId) {
-        Long loginUserId = principalDetails.getUser().getId();
+    public ResponseEntity<String> acceptApplicant(Authentication authentication, @PathVariable Long projectId, @PathVariable Long userId) {
+        Long loginUserId = Long.valueOf(authentication.getName());
 
         projectApplyService.acceptApplicant(loginUserId, projectId, userId);
 

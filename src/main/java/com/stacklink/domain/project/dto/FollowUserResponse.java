@@ -1,4 +1,4 @@
 package com.stacklink.domain.project.dto;
 
 
-public record FollowUserResponse(Long userId, String userName) {}
+public record FollowUserResponse(Long id, String nickname, String position) {}
