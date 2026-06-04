@@ -1,18 +1,33 @@
 // 로그인 폼
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import InputField from '../../components/common/InputField';
 import SocialLoginButtons from '../../components/common/SocialLoginButtons';
+import { login } from '../../api/auth';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // TODO: 백엔드 /api/auth/login 엔드포인트 필요
+        setError('');
+        try {
+            const res = await login(email, password);
+            const { accessToken } = res.data;
+            localStorage.setItem('accessToken', accessToken);
+            const decoded = jwtDecode(accessToken);
+            localStorage.setItem('userId', decoded.sub);
+            localStorage.setItem('role', decoded.role);
+            navigate('/');
+        } catch (err) {
+            setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+        }
     };
 
     return (
@@ -46,6 +61,8 @@ const LoginForm = () => {
                         계정 찾기
                     </Link>
                 </div>
+
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
                 <button
                     type="submit"

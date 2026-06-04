@@ -1,13 +1,15 @@
 // 회원가입 입력 폼
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import InputField from '../../components/common/InputField';
 import SocialLoginButtons from '../../components/common/SocialLoginButtons';
 import Accordion from '../../components/common/Accordion';
 import TechStackSelector from '../../components/common/TechStackSelector';
+import { signup, checkEmail, checkNickname } from '../../api/auth';
 
 const RegisterForm = () => {
+    const navigate = useNavigate();
 
     const [form, setForm] = useState({
         email: '',
@@ -18,44 +20,54 @@ const RegisterForm = () => {
         phoneNumber: '',
     });
 
-    // 선택한 포지션
     const [selectedPosition, setSelectedPosition] = useState('');
-
-    // 선택된 기술 스택
     const [selectedTechs, setSelectedTechs] = useState({});
-
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         if (form.password !== form.passwordConfirm) {
-            alert('비밀번호가 일치하지 않습니다.');
+            setError('비밀번호가 일치하지 않습니다.');
             return;
         }
-        // TODO: 백엔드 /api/auth/signup 연동
-        // role은 APPLICANT로 고정
-        const requestBody = {
-            email: form.email,
-            password: form.password,
-            nickname: form.nickname,
-            username: form.username,
-            phoneNumber: form.phoneNumber,
-            role: 'APPLICANT',
-            position: selectedPosition,
-            techStack: selectedTechs,
-        };
-        console.log(requestBody);
+        try {
+            await signup({
+                email: form.email,
+                password: form.password,
+                nickname: form.nickname,
+                username: form.username,
+                phoneNumber: form.phoneNumber,
+                role: 'APPLICANT',
+                position: selectedPosition,
+                // TODO: 백엔드 SignupRequest에 techStack 추가되면 아래 주석 해제
+                // techStack: selectedTechs,
+            });
+            navigate('/login');
+        } catch (err) {
+            const msg = err.response?.data?.message || '';
+            if (msg.includes('password') && msg.includes('8')) {
+                setError('비밀번호는 8자 이상 입력해주세요.');
+            } else {
+                setError(msg || '회원가입에 실패했습니다.');
+            }
+        }
     };
 
-    const handleEmailCheck = () => {
-        // TODO: 백엔드 이메일 중복 확인 API 필요
+    const handleEmailCheck = async () => {
+        if (!form.email) return;
+        const res = await checkEmail(form.email);
+        alert(res.data ? '사용 가능한 이메일입니다.' : '이미 사용 중인 이메일입니다.');
     };
 
-    const handleNicknameCheck = () => {
-        // TODO: 백엔드 닉네임 중복 확인 API 필요
+    const handleNicknameCheck = async () => {
+        if (!form.nickname) return;
+        const res = await checkNickname(form.nickname);
+        alert(res.data ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.');
     };
 
 
@@ -167,6 +179,8 @@ const RegisterForm = () => {
                         />
                     </Accordion>
                 </div>
+
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
                 {/* 가입 버튼 */}
                 <button

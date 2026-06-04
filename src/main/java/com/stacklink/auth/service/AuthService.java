@@ -48,6 +48,7 @@ public class AuthService {
                 .email(req.getEmail())
                 .phoneNumber(req.getPhoneNumber())
                 .role(role)
+                .position(req.getPosition())
                 .build();
         userRepository.save(user);
     }
@@ -68,8 +69,8 @@ public class AuthService {
      */
     @Transactional(readOnly = true)
     public TokenResponse login(LoginRequest req) {
-        User user = userRepository.findByUsername(req.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
+        User user = userRepository.findByEmail(req.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
         if (user.isDeleted()) {
             throw new IllegalArgumentException("탈퇴한 회원입니다.");
