@@ -1,6 +1,7 @@
 package com.stacklink.domain.project.controller;
 
 import com.stacklink.domain.project.dto.ApplyRequest;
+import com.stacklink.domain.project.dto.MyApplyResponse;
 import com.stacklink.domain.project.dto.ProjectApplyResponse;
 import com.stacklink.domain.project.service.ProjectApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,13 @@ public class ProjectApplyController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+
+    // 내가 지원한 공고 목록
+    @GetMapping("/my-applies")
+    public ResponseEntity<List<MyApplyResponse>> getMyApplies(Authentication authentication) {
+        Long userId = Long.valueOf(authentication.getName());
+        return ResponseEntity.ok(projectApplyService.getMyApplies(userId));
     }
 
     // 공고 지원자 목록 조회

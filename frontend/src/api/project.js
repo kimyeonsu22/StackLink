@@ -35,3 +35,7 @@ export const acceptApplicant = (projectId, userId) =>
 // 내가 올린 공고 목록
 export const getMyProjects = () =>
     api.get('/projects/my');
+
+// 내가 지원한 공고 목록
+export const getMyApplies = () =>
+    api.get('/projects/my-applies');

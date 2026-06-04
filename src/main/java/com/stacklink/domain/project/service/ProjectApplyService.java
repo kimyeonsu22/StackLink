@@ -2,6 +2,7 @@ package com.stacklink.domain.project.service;
 
 
 import com.stacklink.domain.project.dto.ApplyRequest;
+import com.stacklink.domain.project.dto.MyApplyResponse;
 import com.stacklink.domain.project.dto.ProjectApplyResponse;
 import com.stacklink.domain.project.entity.*;
 import com.stacklink.domain.project.enums.ApplicationStatus;
@@ -70,6 +71,15 @@ public class ProjectApplyService {
                 () -> new IllegalArgumentException("지원 내역이 없습니다."));
 
         projectApplyRepository.delete(apply);
+    }
+
+    // 마이페이지에서 내가 지원한 공고 목록 조회
+    @Transactional(readOnly = true)
+    public List<MyApplyResponse> getMyApplies(Long userId) {
+        return projectApplyRepository.findByIdUserId(userId)
+                .stream()
+                .map(MyApplyResponse::from)
+                .toList();
     }
 
     // 지원자 확인

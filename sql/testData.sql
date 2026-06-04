@@ -71,9 +71,9 @@ INSERT INTO project_tech (tech_id, project_id) VALUES
 -- ===== project_apply =====
 -- 이수연(id=3)이 project 1에 지원
 INSERT INTO project_apply (user_id, project_id, status, applied_at, content, position) VALUES
-(3, 1, '수락 대기중', NOW(), '프론트엔드 개발 경험을 살려 열심히 기여하겠습니다!', '프론트엔드'),
+(3, 1, 'APPLIED', NOW(), '프론트엔드 개발 경험을 살려 열심히 기여하겠습니다!', '프론트엔드'),
 -- 박지훈(id=4)이 project 1에 지원
-(4, 1, '수락 대기중', NOW(), '백엔드 경험을 바탕으로 열심히 하겠습니다.', '백엔드');
+(4, 1, 'APPLIED', NOW(), '백엔드 경험을 바탕으로 열심히 하겠습니다.', '백엔드');
 
 -- ===== project_favorite (좋아요한 공고) =====
 -- 김민우(2)가 project 2, 3 좋아요
