@@ -31,10 +31,10 @@ const ProfileSection = ({ user }) => {
                 <p className="text-sm text-gray-500">{user.username}</p>
                 <p className="text-sm text-gray-500">{user.email}</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                    {user.tags?.map((tag) => (
-                        <span key={tag} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
-              {tag}
-            </span>
+                    {Object.entries(user.techStack || {}).map(([tech, career]) => (
+                        <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
+                            {tech} · {career}
+                        </span>
                     ))}
                 </div>
                 <p className="text-xs text-gray-400 mt-1">{user.position}</p>

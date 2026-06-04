@@ -2,8 +2,7 @@
 
 import { Link } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
-
-const dummyNickname = '닉네임';
+import { currentUser } from '../../data/dummy';
 
 const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
     return (
@@ -24,7 +23,7 @@ const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
 
             {/* 우측 프로필*/}
             <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{dummyNickname}</span>님</span>
+                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{currentUser.nickname}</span>님</span>
                 <Link to={profilePath}>
                     <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
                         <FiUser size={18} className="text-purple-600" />

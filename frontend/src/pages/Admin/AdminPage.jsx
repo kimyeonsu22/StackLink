@@ -1,74 +1,49 @@
+// 관리자 페이지
+
 import { useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
+import Pagination from '../../components/common/Pagination';
+import ProjectInfo from '../../components/project/ProjectInfo';
+import ProjectContent from '../../components/project/ProjectContent';
+import { projects, members } from '../../data/dummy';
 
 const adminMenus = [
   { label: '관리자 홈', icon: <FiHome />, path: '/admin' },
 ];
-import Pagination from '../../components/common/Pagination';
-import ProjectInfo from '../../components/project/ProjectInfo';
-import ProjectContent from '../../components/project/ProjectContent';
-
-// TODO: 백엔드 API 연동 후 실제 데이터로 교체
-const dummyProjects = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  title: 'AI 기반 기술 블로그 플랫폼 개발',
-  tags: ['React', 'Node.js', 'MongoDB', 'AWS'],
-  position: '모집중',
-  recruitCount: 3,
-  deadline: '2026.07.08',
-  favoriteCount: 128,
-  applyCount: 3,
-  viewCount: 210,
-  author: '닉네임',
-  isClosed: i % 3 === 0,
-  createdAt: '2026.05.01',
-  content: 'AI 기반으로 개인 맞춤형 기술 블로그를 제공하는 플랫폼을 개발하고 있습니다.',
-}));
-
-const dummyMembers = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  nickname: '닉네임',
-  position: '백엔드',
-  career: '1년 미만',
-  projectCount: i % 4,
-  applyCount: i % 5,
-  joinedAt: '2026.05.01',
-}));
 
 const PROJECT_PAGE_SIZE = 5;
-const MEMBER_PAGE_SIZE = 5;
+const MEMBER_PAGE_SIZE = 7;
 
 const AdminPage = () => {
   const [projectPage, setProjectPage] = useState(1);
   const [memberPage, setMemberPage] = useState(1);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  const totalProjectPages = Math.ceil(dummyProjects.length / PROJECT_PAGE_SIZE);
-  const totalMemberPages = Math.ceil(dummyMembers.length / MEMBER_PAGE_SIZE);
+  const totalProjectPages = Math.ceil(projects.length / PROJECT_PAGE_SIZE);
+  const totalMemberPages = Math.ceil(members.length / MEMBER_PAGE_SIZE);
 
-  const currentProjects = dummyProjects.slice(
+  const currentProjects = projects.slice(
     (projectPage - 1) * PROJECT_PAGE_SIZE,
     projectPage * PROJECT_PAGE_SIZE
   );
 
-  const currentMembers = dummyMembers.slice(
+  const currentMembers = members.slice(
     (memberPage - 1) * MEMBER_PAGE_SIZE,
     memberPage * MEMBER_PAGE_SIZE
   );
 
   const projectStats = [
-    { label: '전체 공고수', value: dummyProjects.length },
-    { label: '모집중', value: dummyProjects.filter((p) => !p.isClosed).length },
-    { label: '마감 공고', value: dummyProjects.filter((p) => p.isClosed).length },
+    { label: '전체 공고수', value: projects.length },
+    { label: '모집중', value: projects.filter((p) => !p.isClosed).length },
+    { label: '마감 공고', value: projects.filter((p) => p.isClosed).length },
   ];
 
-  // TODO: 백엔드 API 연동 후 실제 데이터로 교체
   const memberStats = [
-    { label: '전체 회원수', value: dummyMembers.length },
-    { label: '공고 올린 회원수', value: dummyMembers.filter((m) => m.projectCount > 0).length },
-    { label: '지원한 회원수', value: dummyMembers.filter((m) => m.applyCount > 0).length },
+    { label: '전체 회원수', value: members.length },
+    { label: '공고 올린 회원수', value: members.filter((m) => m.projectCount > 0).length },
+    { label: '지원한 회원수', value: members.filter((m) => m.applyCount > 0).length },
   ];
 
   const handleDelete = (projectId) => {
@@ -157,7 +132,7 @@ const AdminPage = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-gray-800">{member.nickname}</p>
-                      <p className="text-xs text-gray-400">{member.position} · {member.career}</p>
+                      <p className="text-xs text-gray-400">{member.position}</p>
                     </div>
                     <div className="flex gap-4 text-xs text-gray-500">
                       <div className="flex flex-col items-center">
@@ -208,7 +183,7 @@ const AdminPage = () => {
               </button>
             </div>
 
-            <ProjectInfo project={selectedProject} showFollow={false} />
+            <ProjectInfo project={selectedProject} />
             <ProjectContent project={selectedProject} />
 
             <button

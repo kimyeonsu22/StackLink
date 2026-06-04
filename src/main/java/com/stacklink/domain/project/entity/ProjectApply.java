@@ -20,7 +20,7 @@ public class ProjectApply {
     @Column(nullable=false)
     private ApplicationStatus status;
 
-    @Column(nullable=false)
+    @Column(nullable=false, name="applied_at")
     private LocalDateTime applyAt;
 
     @Column(nullable = false, columnDefinition = "TEXT")

@@ -2,12 +2,12 @@
 
 import { useNavigate } from 'react-router-dom';
 
-const MyProjectCard = ({ project }) => {
+const MyProjectCard = ({ project, path, navState }) => {
     const navigate = useNavigate();
 
     return (
         <div
-            onClick={() => navigate(`/projects/${project.id}`)}
+            onClick={() => navigate(path ?? `/projects/${project.id}`, { state: navState })}
             className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-purple-300 transition flex flex-col gap-2"
         >
             <h3 className="font-semibold text-gray-900 text-sm">{project.title}</h3>
