@@ -10,7 +10,6 @@ import { login } from '../../api/auth';
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -48,21 +47,7 @@ const LoginForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center gap-1 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        Remember me
-                    </label>
-                    <Link to="/find-account" className="text-purple-600 hover:underline">
-                        계정 찾기
-                    </Link>
-                </div>
-
-                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+{error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
                 <button
                     type="submit"

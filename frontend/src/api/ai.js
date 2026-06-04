@@ -7,3 +7,8 @@ export const checkSubscription = (userId) =>
 // AI 매칭 추천 (구독자만)
 export const getAiMatching = (userId, techStack) =>
     api.get(`/ai/matching/${userId}`, { params: { techStack } });
+
+// Todo: 구독하기 필요
+
+
+// Todo: 구독취소 필요
