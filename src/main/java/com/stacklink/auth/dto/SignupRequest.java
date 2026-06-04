@@ -4,11 +4,11 @@ import com.stacklink.domain.project.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 
+// SignupRequest — 이름은 username으로, role은 선택값(기본 APPLICANT)
 @Getter
 public class SignupRequest {
-
-    @NotBlank @Size(max = 20)
-    private String username;
+    @NotBlank @Email @Size(max = 50)
+    private String email;
 
     @NotBlank @Size(min = 8, max = 256)
     private String password;
@@ -16,13 +16,11 @@ public class SignupRequest {
     @NotBlank @Size(max = 20)
     private String nickname;
 
-    @NotBlank @Email @Size(max = 50)
-    private String email;
+    @NotBlank @Size(max = 20)
+    private String username;   // 폼의 "이름"
 
     @NotBlank
     private String phoneNumber;
 
-    // 가입 시 구직(APPLICANT) / 채용(RECRUITER) 선택. ADMIN은 가입 불가
-    @NotNull
-    private Role role;
+    private Role role;         // 폼에서 안 받으면 null → 서비스에서 APPLICANT 처리
 }
