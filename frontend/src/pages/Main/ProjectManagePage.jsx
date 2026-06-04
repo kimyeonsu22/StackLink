@@ -1,29 +1,33 @@
-// 모집자 기준에서 프로젝트 관리 페이지 (지원자 지원 현황, 수락 등)
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Pagination from '../../components/common/Pagination';
-import ProjectContent from '../../components/project/ProjectContent';
-import { applicants as initialApplicants, projects } from '../../data/dummy';
+import { getProject, getApplicants, acceptApplicant, rejectApplicant } from '../../api/project';
 
 const PAGE_SIZE = 6;
 
 const ProjectManagePage = () => {
   const { id } = useParams();
-  // TODO: 백엔드 지원자 목록 API 연동 후 교체
-  const [applicants, setApplicants] = useState(
-    initialApplicants.filter(a => a.projectId === Number(id))
-  );
+  const [project, setProject] = useState(null);
+  const [applicants, setApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
-  const project = projects.find(p => p.id === Number(id));
-  if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
+  useEffect(() => {
+    getProject(id).then((res) => setProject(res.data));
+    fetchApplicants();
+  }, [id]);
 
-  const pendingApplicants = applicants.filter((a) => !a.isApproved);
-  const approvedApplicants = applicants.filter((a) => a.isApproved);
+  const fetchApplicants = async () => {
+    const res = await getApplicants(id);
+    setApplicants(res.data);
+  };
+
+  if (!project) return null;
+
+  const pendingApplicants = applicants.filter((a) => a.status === 'APPLIED');
+  const acceptedApplicants = applicants.filter((a) => a.status === 'ACCEPTED');
 
   const totalPages = Math.ceil(pendingApplicants.length / PAGE_SIZE);
   const currentApplicants = pendingApplicants.slice(
@@ -32,25 +36,23 @@ const ProjectManagePage = () => {
   );
 
   const stats = [
-    { label: '지원자 수', value: applicants.length },
+    { label: '지원자 수', value: applicants.filter((a) => a.status !== 'REJECTED').length },
     { label: '모집 인원', value: project.recruitCount },
-    { label: '승인 인원', value: approvedApplicants.length },
+    { label: '승인 인원', value: acceptedApplicants.length },
   ];
 
-  const handleApprove = (applicantId) => {
-    // TODO: 백엔드 PATCH /api/projects/:id/applicants/:applicantId/approve 연동 필요
-    if (approvedApplicants.length >= project.recruitCount) {
+  const handleAccept = async (userId) => {
+    if (acceptedApplicants.length >= project.recruitCount) {
       alert('모집 인원이 가득 찼습니다.');
       return;
     }
-    setApplicants((prev) =>
-      prev.map((a) => (a.id === applicantId ? { ...a, isApproved: true } : a))
-    );
+    await acceptApplicant(id, userId);
+    fetchApplicants();
   };
 
-  const handleReject = (applicantId) => {
-    // TODO: 백엔드 DELETE /api/projects/:id/applicants/:applicantId 연동 필요
-    setApplicants((prev) => prev.filter((a) => a.id !== applicantId));
+  const handleReject = async (userId) => {
+    await rejectApplicant(id, userId);
+    fetchApplicants();
   };
 
   return (
@@ -78,23 +80,23 @@ const ProjectManagePage = () => {
                 <div className="flex flex-col gap-3">
                   {currentApplicants.map((applicant) => (
                     <div
-                      key={applicant.id}
+                      key={applicant.userId}
                       onClick={() => setSelectedApplicant(applicant)}
                       className="border border-gray-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:border-purple-300 hover:shadow-sm transition"
                     >
                       <div>
                         <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
-                        <p className="text-xs text-gray-400">{applicant.applyPosition}</p>
+                        <p className="text-xs text-gray-400">{applicant.position}</p>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
-                          onClick={() => handleApprove(applicant.id)}
+                          onClick={() => handleAccept(applicant.userId)}
                           className="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-lg hover:bg-purple-700 transition"
                         >
                           승인
                         </button>
                         <button
-                          onClick={() => handleReject(applicant.id)}
+                          onClick={() => handleReject(applicant.userId)}
                           className="text-xs bg-white text-red-500 border border-red-300 px-3 py-1.5 rounded-lg hover:bg-red-50 transition"
                         >
                           거절
@@ -116,18 +118,18 @@ const ProjectManagePage = () => {
                 )}
               </div>
 
-              {approvedApplicants.length > 0 && (
+              {acceptedApplicants.length > 0 && (
                 <div className="bg-white rounded-2xl p-5 flex flex-col gap-3">
                   <h2 className="text-base font-bold text-gray-900">승인된 지원자</h2>
-                  {approvedApplicants.map((applicant) => (
+                  {acceptedApplicants.map((applicant) => (
                     <div
-                      key={applicant.id}
+                      key={applicant.userId}
                       onClick={() => setSelectedApplicant(applicant)}
                       className="border border-purple-200 bg-purple-50 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-sm transition"
                     >
                       <div>
                         <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
-                        <p className="text-xs text-gray-400">{applicant.applyPosition}</p>
+                        <p className="text-xs text-gray-400">{applicant.position}</p>
                       </div>
                       <span className="text-xs bg-purple-600 text-white px-3 py-1 rounded-full">
                         승인 완료
@@ -139,10 +141,15 @@ const ProjectManagePage = () => {
 
             </div>
 
+            {/* 공고 정보 */}
             <div className="w-80 flex-shrink-0">
               <div className="bg-white rounded-2xl p-5 flex flex-col gap-3">
-                <h3 className="text-sm font-bold text-gray-900">{project.title}</h3>
-                <ProjectContent project={project} />
+                <h3 className="text-sm font-bold text-gray-900">{project.projectname}</h3>
+                <p className="text-xs text-gray-500">{project.content}</p>
+                <div className="flex justify-between text-xs text-gray-400 border-t border-gray-100 pt-3">
+                  <span>모집 인원: {project.recruitCount}명</span>
+                  <span>마감: {project.deadlineAt?.slice(0, 10)}</span>
+                </div>
               </div>
             </div>
 
@@ -150,6 +157,7 @@ const ProjectManagePage = () => {
         </main>
       </div>
 
+      {/* 지원자 상세 모달 */}
       {selectedApplicant && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -173,36 +181,25 @@ const ProjectManagePage = () => {
               <div className="w-16 h-16 rounded-full bg-purple-200 flex-shrink-0" />
               <div className="flex flex-col gap-1">
                 <p className="font-bold text-gray-900">{selectedApplicant.nickname}</p>
-                <p className="text-sm text-gray-500">{selectedApplicant.username} · {selectedApplicant.phoneNumber}</p>
-                <p className="text-sm text-gray-500">{selectedApplicant.position}</p>
-                <p className="text-sm text-gray-400">{selectedApplicant.bio}</p>
+                <p className="text-sm text-gray-500">{selectedApplicant.email} · {selectedApplicant.phoneNumber}</p>
+                <p className="text-sm text-gray-500">{selectedApplicant.userPosition}</p>
               </div>
             </div>
 
-            {/* 지원 내용 */}
             <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-xs text-gray-400 mb-1">지원 포지션: {selectedApplicant.applyPosition}</p>
-              <p className="text-sm text-gray-700">{selectedApplicant.applyContent}</p>
+              <p className="text-xs text-gray-400 mb-1">지원 포지션: {selectedApplicant.position}</p>
+              <p className="text-sm text-gray-700">{selectedApplicant.content}</p>
             </div>
 
-            <div className="flex flex-wrap gap-1">
-              {Object.entries(selectedApplicant.techStack || {}).map(([tech, career]) => (
-                <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
-                  {tech} · {career}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex gap-6 border-t border-gray-100 pt-4 justify-center">
-              <div className="flex flex-col items-center">
-                <span className="text-xl font-bold text-gray-900">{selectedApplicant.followerCount}</span>
-                <span className="text-xs text-gray-400">팔로워</span>
+            {selectedApplicant.techStack?.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {selectedApplicant.techStack.map((tech) => (
+                  <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
+                    {tech}
+                  </span>
+                ))}
               </div>
-              <div className="flex flex-col items-center">
-                <span className="text-xl font-bold text-gray-900">{selectedApplicant.followingCount}</span>
-                <span className="text-xs text-gray-400">팔로잉</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}

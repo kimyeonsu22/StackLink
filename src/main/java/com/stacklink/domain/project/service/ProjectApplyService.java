@@ -9,6 +9,7 @@ import com.stacklink.domain.project.enums.ApplicationStatus;
 import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectMemberRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,16 @@ public class ProjectApplyService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
+    // 유저별 기술스택 조회해서 반환해주기 위함
+    private final TechUsersRepository techUsersRepository;
 
     @Autowired
-    public ProjectApplyService(ProjectApplyRepository projectApplyRepository, ProjectRepository projectRepository, ProjectMemberRepository projectMemberRepository, UserRepository userRepository) {
+    public ProjectApplyService(ProjectApplyRepository projectApplyRepository, ProjectRepository projectRepository, ProjectMemberRepository projectMemberRepository, UserRepository userRepository, TechUsersRepository techUsersRepository) {
         this.projectApplyRepository = projectApplyRepository;
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.userRepository = userRepository;
+        this.techUsersRepository = techUsersRepository;
     }
 
     // 공고 지원
@@ -86,7 +90,20 @@ public class ProjectApplyService {
     @Transactional(readOnly = true)
     public List<ProjectApplyResponse> getApplicants(Long projectId) {
         List<ProjectApply> applies = projectApplyRepository.findByIdProjectId(projectId);
-        return applies.stream().map(ProjectApplyResponse::from).toList();
+        return applies.stream()
+                .map(apply -> ProjectApplyResponse.from(
+                        apply,
+                        techUsersRepository.findByUser_Id(apply.getId().getUserId())))
+                .toList();
+    }
+
+    // 지원자 거절 로직 추가함
+    @Transactional
+    public void rejectApplicant(Long projectId, Long userId) {
+        ProjectApplyId applyId = new ProjectApplyId(userId, projectId);
+        ProjectApply apply = projectApplyRepository.findById(applyId)
+                .orElseThrow(() -> new IllegalArgumentException("지원 내역이 없습니다."));
+        apply.setStatus(ApplicationStatus.REJECTED);
     }
 
     // 지원자 중 팀원 선택

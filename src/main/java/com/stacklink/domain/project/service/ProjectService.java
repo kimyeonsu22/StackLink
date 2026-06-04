@@ -5,6 +5,8 @@ import com.stacklink.domain.project.dto.ProjectResponse;
 import com.stacklink.domain.project.dto.ProjectUpdateRequest;
 import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.entity.User;
+import com.stacklink.domain.project.enums.ApplicationStatus;
+import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final ProjectApplyRepository projectApplyRepository;
 
     // 생성
     public Long createProject(
@@ -121,6 +125,21 @@ public class ProjectService {
                         .deadlineAt(p.getDeadlineAt())
                         .build())
                 .toList();
+    }
+
+    // 공개 통계
+    @Transactional(readOnly = true)
+    public Map<String, Object> getStats() {
+        long total = projectApplyRepository.count();
+        long accepted = projectApplyRepository.countByStatus(ApplicationStatus.ACCEPTED);
+        long matchRate = total == 0 ? 0 : Math.round((double) accepted / total * 100);
+
+        return Map.of(
+                "total",     projectRepository.countByIsDeleted(false),
+                "active",    projectRepository.countByIsClosed(false),
+                "applicants", total,
+                "matchRate", matchRate
+        );
     }
 
     // 핫한 공고 Top 5

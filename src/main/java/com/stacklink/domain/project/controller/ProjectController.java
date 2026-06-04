@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,7 +69,9 @@ public class ProjectController {
         return projectService.getHotProjects();
     }
 
-    // 통계 (전체 공고수, 모집중, 지원자 수, 매칭률)
-
-
+    // 공개 통계 (전체 공고수, 모집중, 지원자 수, 매칭률)
+    @GetMapping("/stats")
+    public Map<String, Object> getStats() {
+        return projectService.getStats();
+    }
 }

@@ -1,6 +1,6 @@
 // 프로젝트 상세 페이지
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -9,12 +9,18 @@ import ProjectContent from '../../components/project/ProjectContent';
 import ReplySection from '../../components/project/ReplySection';
 import TeamLeaderCard from '../../components/project/TeamLeaderCard';
 import HotProjects from '../../components/project/HotProjects';
-import { projects, members, hotProjects, currentUser, applicants } from '../../data/dummy';
+import { projects, members, currentUser, applicants } from '../../data/dummy';
+import { getTop5Projects } from '../../api/project';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
+  const [hotProjects, setHotProjects] = useState([]);
+
+  useEffect(() => {
+    getTop5Projects().then((res) => setHotProjects(res.data));
+  }, []);
 
   const project = projects.find(p => p.id === Number(id));
   if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;

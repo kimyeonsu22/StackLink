@@ -43,3 +43,15 @@ export const getMyApplies = () =>
 // 공고 지원 취소
 export const cancelApply = (projectId) =>
     api.delete(`/projects/${projectId}/apply`);
+
+// 지원자 거절
+export const rejectApplicant = (projectId, userId) =>
+    api.patch(`/projects/${projectId}/applications/${userId}/reject`);
+
+// 핫한 공고 Top5
+export const getTop5Projects = () =>
+    api.get('/projects/top5');
+
+// 공개 통계
+export const getProjectStats = () =>
+    api.get('/projects/stats');

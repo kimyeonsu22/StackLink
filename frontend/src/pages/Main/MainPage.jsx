@@ -1,5 +1,6 @@
 // 메인페이지
 
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -8,11 +9,26 @@ import AiRecommendTop5 from '../../components/project/AiRecommendTop5';
 import SubscribePrompt from '../../components/project/SubscribePrompt';
 import StatBar from '../../components/common/StatBar';
 import HotProjects from '../../components/project/HotProjects.jsx';
-import { projects, stats, hotProjects, aiRecommendProjects, currentUser } from '../../data/dummy';
+import { projects, aiRecommendProjects, currentUser } from '../../data/dummy';
+import { getTop5Projects, getProjectStats } from '../../api/project';
 
 const MainPage = () => {
-    // TODO: 백엔드 인증 API 연동 후 실제 구독 여부로 교체
     const isSubscribed = currentUser.isSubscribed;
+    const [hotProjects, setHotProjects] = useState([]);
+    const [stats, setStats] = useState([]);
+
+    useEffect(() => {
+        getTop5Projects().then((res) => setHotProjects(res.data));
+        getProjectStats().then((res) => {
+            const d = res.data;
+            setStats([
+                { label: '전체공고수', value: d.total },
+                { label: '모집중', value: d.active },
+                { label: '지원자수', value: d.applicants },
+                { label: '매칭률', value: `${d.matchRate}%` },
+            ]);
+        });
+    }, []);
 
     return (
         <div className="flex flex-col h-screen bg-gray-50">
