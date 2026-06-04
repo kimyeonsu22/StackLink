@@ -1,6 +1,8 @@
 package com.stacklink.auth.controller;
 
-import com.stacklink.auth.dto.*;
+import com.stacklink.auth.dto.LoginRequest;
+import com.stacklink.auth.dto.SignupRequest;
+import com.stacklink.auth.dto.TokenResponse;
 import com.stacklink.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +16,29 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /** 자체 회원가입 API */
+    /**
+     * 자체 회원가입 API
+     */
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
         authService.signup(request);
         return ResponseEntity.ok().build();
     }
 
-    /** 자체 로그인 API (JWT 반환) */
+    // AuthController
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        return ResponseEntity.ok(authService.isEmailAvailable(email));  // true=사용가능
+    }
+
+    @GetMapping("/check-nickname")
+    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(authService.isNicknameAvailable(nickname));
+    }
+
+    /**
+     * 자체 로그인 API (JWT 반환)
+     */
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));

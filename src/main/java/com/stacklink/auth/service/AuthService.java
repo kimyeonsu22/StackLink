@@ -1,8 +1,11 @@
 package com.stacklink.auth.service;
 
-import com.stacklink.auth.dto.*;
+import com.stacklink.auth.dto.LoginRequest;
+import com.stacklink.auth.dto.SignupRequest;
+import com.stacklink.auth.dto.TokenResponse;
 import com.stacklink.auth.jwt.JwtTokenProvider;
-import com.stacklink.domain.project.entity.*;
+import com.stacklink.domain.project.entity.Role;
+import com.stacklink.domain.project.entity.User;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,13 +26,11 @@ public class AuthService {
      * - ADMIN 권한 가입 차단
      * - 비밀번호 암호화 후 저장
      */
+    // AuthService.signup — role 기본값 처리, username 중복검사 제거(스키마상 unique 아님)
     @Transactional
     public void signup(SignupRequest req) {
         if (req.getRole() == Role.ADMIN) {
             throw new IllegalArgumentException("관리자 권한으로는 가입할 수 없습니다.");
-        }
-        if (userRepository.existsByUsername(req.getUsername())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
@@ -38,15 +39,27 @@ public class AuthService {
             throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
 
+        Role role = (req.getRole() != null) ? req.getRole() : Role.APPLICANT;  // 기본 구직회원
+
         User user = User.builder()
                 .username(req.getUsername())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .nickname(req.getNickname())
                 .email(req.getEmail())
                 .phoneNumber(req.getPhoneNumber())
-                .role(req.getRole())   // APPLICANT 또는 RECRUITER
+                .role(role)
                 .build();
         userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isEmailAvailable(String email) {
+        return !userRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isNicknameAvailable(String nickname) {
+        return !userRepository.existsByNickname(nickname);
     }
 
     /**
