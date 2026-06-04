@@ -1,8 +1,8 @@
 package com.stacklink.domain.project.entity;
 
+import com.stacklink.domain.project.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,8 +16,9 @@ public class ProjectApply {
     @EmbeddedId
     private ProjectApplyId id;
 
-    @Column(nullable=false, length=20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
+    private ApplicationStatus status;
 
     @Column(nullable=false)
     private LocalDateTime applyAt;
@@ -27,7 +28,4 @@ public class ProjectApply {
 
     @Column(nullable = false, length = 20)
     private String position;
-
-    @Column(name="is_deleted")
-    private Boolean deleted;
 }
