@@ -18,8 +18,9 @@ const LoginForm = () => {
         setError('');
         try {
             const res = await login(email, password);
-            const { accessToken } = res.data;
+            const { accessToken, nickname } = res.data;
             localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('nickname', nickname);
             const decoded = jwtDecode(accessToken);
             localStorage.setItem('userId', decoded.sub);
             localStorage.setItem('role', decoded.role);
