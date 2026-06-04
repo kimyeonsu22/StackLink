@@ -59,6 +59,9 @@ public class SecurityConfig {
                         // AI 매칭 허용
                         .requestMatchers("/ai/**").permitAll()
 
+                        // 관리자 API -> ADMIN 만 접근 허용
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
 

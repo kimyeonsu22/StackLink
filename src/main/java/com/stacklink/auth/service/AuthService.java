@@ -68,6 +68,6 @@ public class AuthService {
 
         String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRole().getKey());
         String refreshToken = tokenProvider.createRefreshToken(user.getId());
-        return new TokenResponse("Bearer", accessToken, refreshToken);
+        return new TokenResponse("Bearer", accessToken, refreshToken, user.getRole().getKey());
     }
 }

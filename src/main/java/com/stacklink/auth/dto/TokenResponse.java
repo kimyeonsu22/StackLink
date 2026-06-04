@@ -9,4 +9,5 @@ public class TokenResponse {
     private String grantType;     // "Bearer"
     private String accessToken;
     private String refreshToken;
+    private String role;
 }
