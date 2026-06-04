@@ -8,7 +8,7 @@ import ProfileSection from '../../components/mypage/ProfileSection';
 import MyProjectCard from '../../components/mypage/MyProjectCard';
 import Pagination from '../../components/common/Pagination';
 import { getMyProfile } from '../../api/user';
-import { getMyProjects, getMyApplies } from '../../api/project';
+import { getMyProjects, getMyApplies, cancelApply } from '../../api/project';
 import { getMyFavorites } from '../../api/favorites';
 
 const PAGE_SIZE = 4;
@@ -62,6 +62,18 @@ const MyPage = () => {
       applyPage * PAGE_SIZE
   );
 
+  const handleCancelApply = async (e, projectId) => {
+    e.stopPropagation();
+    if (!window.confirm('지원을 취소하시겠습니까?')) return;
+    try {
+      await cancelApply(projectId);
+      setMyApplies((prev) => prev.filter((a) => a.projectId !== projectId));
+    } catch (err) {
+      alert('지원 취소에 실패했습니다.');
+      console.error(err);
+    }
+  };
+
   const statusLabel = (status) => {
     switch (status) {
       case 'APPLIED': return { text: '검토 중', style: 'bg-yellow-100 text-yellow-600' };
@@ -105,10 +117,7 @@ const MyPage = () => {
                           {statusLabel(apply.status).text}
                         </span>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // TODO: 지원 취소 API 연동
-                          }}
+                          onClick={(e) => handleCancelApply(e, apply.projectId)}
                           className="text-xs text-red-400 border border-red-300 px-2 py-1 rounded-lg hover:bg-red-50 transition"
                         >
                           지원 취소

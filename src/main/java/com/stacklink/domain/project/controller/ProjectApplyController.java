@@ -1,6 +1,5 @@
 package com.stacklink.domain.project.controller;
 
-import com.stacklink.auth.oauth2.PrincipalDetails;
 import com.stacklink.domain.project.dto.ApplyRequest;
 import com.stacklink.domain.project.dto.MyApplyResponse;
 import com.stacklink.domain.project.dto.ProjectApplyResponse;
@@ -41,9 +40,11 @@ public class ProjectApplyController {
 
     // 공고 지원 취소
     @DeleteMapping("/{projectId}/apply")
-    public ResponseEntity<String> cancelApply(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<String> cancelApply(//@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                              Authentication authentication,
                                               @PathVariable Long projectId) {
-        Long userId = principalDetails.getUser().getId();
+        //Long userId = principalDetails.getUser().getId();
+        Long userId = Long.valueOf(authentication.getName());
 
         try{
             projectApplyService.cancelApply(userId, projectId);

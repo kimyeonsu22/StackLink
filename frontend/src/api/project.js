@@ -39,3 +39,7 @@ export const getMyProjects = () =>
 // 내가 지원한 공고 목록
 export const getMyApplies = () =>
     api.get('/projects/my-applies');
+
+// 공고 지원 취소
+export const cancelApply = (projectId) =>
+    api.delete(`/projects/${projectId}/apply`);
