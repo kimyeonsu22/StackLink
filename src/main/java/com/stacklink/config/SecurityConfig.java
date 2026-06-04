@@ -56,6 +56,9 @@ public class SecurityConfig {
                         // 프로젝트 생성/수정/삭제 허용 (테스트용)
                         .requestMatchers("/projects/**").permitAll()
 
+                        // AI 매칭 허용
+                        .requestMatchers("/ai/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
 
