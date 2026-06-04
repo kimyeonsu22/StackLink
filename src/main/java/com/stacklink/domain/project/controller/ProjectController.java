@@ -51,4 +51,11 @@ public class ProjectController {
     ) {
         projectService.deleteProject(projectId);
     }
+
+    // 핫한 공고 Top 5 (좋아요 * 2 + 지원자 수 * 5로 도출)
+    @GetMapping("/top5")
+    public List<ProjectResponse> getTop5Projects() {
+        return projectService.getHotProjects();
+    }
+
 }

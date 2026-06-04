@@ -51,10 +51,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // 프로젝트 조회 허용
-                        .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
 
                         // 프로젝트 생성/수정/삭제 허용 (테스트용)
-                        .requestMatchers("/api/projects/**").permitAll()
+                        .requestMatchers("/projects/**").permitAll()
+
+                        // AI 매칭 허용
+                        .requestMatchers("/ai/**").permitAll()
+
+                        // 관리자 API -> ADMIN 만 접근 허용
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

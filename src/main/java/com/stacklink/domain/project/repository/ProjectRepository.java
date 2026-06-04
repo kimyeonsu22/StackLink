@@ -13,9 +13,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
+
     List<Project> findByIsDeletedFalse();
 
     Optional<Project> findByIdAndIsDeletedFalse(Long id);
+
+    // AI 매칭용 - 삭제 안됐고 마감 안된 공고만 조회
+    List<Project> findByIsDeletedFalseAndIsClosedFalse();
 
     @Query("""
     SELECT p FROM Project p
@@ -40,4 +44,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     long countByIsDeleted(boolean isDeleted);
     long countByIsClosed(boolean isClosed);
 
+    @Query("""
+        SELECT p
+        FROM Project p
+        LEFT JOIN p.applies pa
+        WHERE p.isDeleted = false AND p.isClosed = false
+        GROUP BY p
+        ORDER BY (p.favoriteCount * 2 + COUNT(pa) * 8) DESC
+""")
+    Page<Project> findHotProjects(Pageable pageable);
 }
