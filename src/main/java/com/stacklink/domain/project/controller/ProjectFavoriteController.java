@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/favorites")
+@RequestMapping("/api/favorites")
 public class ProjectFavoriteController {
     private final ProjectFavoriteService projectFavoriteService;
 
