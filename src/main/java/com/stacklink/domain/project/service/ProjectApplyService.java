@@ -69,15 +69,13 @@ public class ProjectApplyService {
         ProjectApply apply = projectApplyRepository.findById(applyId).orElseThrow(
                 () -> new IllegalArgumentException("지원 내역이 없습니다."));
 
-        apply.setDeleted(true);
-
-        projectApplyRepository.save(apply);
+        projectApplyRepository.delete(apply);
     }
 
     // 지원자 확인
     @Transactional(readOnly = true)
     public List<ProjectApplyResponse> getApplicants(Long projectId) {
-        List<ProjectApply> applies = projectApplyRepository.findByProjectId(projectId);
+        List<ProjectApply> applies = projectApplyRepository.findByIdProjectId(projectId);
         return applies.stream().map(ProjectApplyResponse::from).toList();
     }
 

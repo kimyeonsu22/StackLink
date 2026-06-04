@@ -28,7 +28,4 @@ public class ProjectApply {
 
     @Column(nullable = false, length = 20)
     private String position;
-
-    @Column(name="is_deleted")
-    private Boolean deleted;
 }
