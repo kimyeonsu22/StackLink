@@ -1,5 +1,6 @@
 package com.stacklink.domain.project.dto;
 
+import com.stacklink.domain.project.entity.Project;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,4 +31,12 @@ public class ProjectResponse {
     private Integer favoriteCount;
 
     private LocalDateTime deadlineAt;
+
+    public static ProjectResponse from(Project p) {
+        return ProjectResponse.builder()
+                .id(p.getId())
+                .projectname(p.getProjectName())
+                .favoriteCount(p.getFavoriteCount())
+                .build();
+    }
 }

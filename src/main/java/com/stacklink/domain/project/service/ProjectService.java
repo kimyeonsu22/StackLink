@@ -8,6 +8,7 @@ import com.stacklink.domain.project.entity.User;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,5 +105,15 @@ public class ProjectService {
 
         project.setDeleted(true);
         project.setUpdatedAt(LocalDateTime.now());
+    }
+
+    // 핫한 공고 Top 5
+    @Transactional(readOnly = true)
+    public List<ProjectResponse> getHotProjects(){
+        return projectRepository.findHotProjects(PageRequest.of(0,5))
+                .getContent()
+                .stream()
+                .map(ProjectResponse::from)
+                .toList();
     }
 }

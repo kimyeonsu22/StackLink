@@ -4,6 +4,8 @@ import com.stacklink.domain.project.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "project")
@@ -59,4 +61,10 @@ public class Project {
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @Transient
+    private Integer hotScore;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectApply> applies = new ArrayList<>();
 }

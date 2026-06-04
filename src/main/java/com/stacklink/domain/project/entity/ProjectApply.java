@@ -28,4 +28,14 @@ public class ProjectApply {
 
     @Column(nullable = false, length = 20)
     private String position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("projectId")
+    @JoinColumn(name= "project_id")
+    private Project project;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    private User user;
 }

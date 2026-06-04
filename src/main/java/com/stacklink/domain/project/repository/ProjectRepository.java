@@ -43,4 +43,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     long countByIsDeleted(boolean isDeleted);
     long countByIsClosed(boolean isClosed);
+
+    @Query("""
+        SELECT p
+        FROM Project p
+        LEFT JOIN p.applies pa
+        WHERE p.isDeleted = false AND p.isClosed = false
+        GROUP BY p
+        ORDER BY (p.favoriteCount * 2 + COUNT(pa) * 8) DESC
+""")
+    Page<Project> findHotProjects(Pageable pageable);
 }
