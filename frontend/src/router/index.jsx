@@ -20,21 +20,29 @@ import MyPageEdit from '../pages/MyPage/MyPageEdit';
 // 관리자 페이지
 import AdminPage from '../pages/Admin/AdminPage';
 import AdminRoute from './AdminRoute';
+import UserRoute from './UserRoute';
 
 // 구독
 import SubscriptionPage from '../pages/Subscription/SubscriptionPage';
 
 const router = createBrowserRouter([
-    { path: '/', element: <MainPage /> },
-
     { path: '/login', element: <LoginPage /> },
     { path: '/register', element: <RegisterPage /> },
 
-    { path: '/projects', element: <ProjectListPage /> },
-    { path: '/projects/:id', element: <ProjectDetailPage /> },
-    { path: '/projects/create', element: <ProjectCreatePage /> },
-    { path: '/projects/:id/apply', element: <ProjectApplyPage /> },
-    { path: '/projects/:id/applicants', element: <ProjectManagePage /> },
+    {
+        element: <UserRoute />,
+        children: [
+            { path: '/', element: <MainPage /> },
+            { path: '/projects', element: <ProjectListPage /> },
+            { path: '/projects/:id', element: <ProjectDetailPage /> },
+            { path: '/projects/create', element: <ProjectCreatePage /> },
+            { path: '/projects/:id/apply', element: <ProjectApplyPage /> },
+            { path: '/projects/:id/applicants', element: <ProjectManagePage /> },
+            { path: '/mypage', element: <MyPage /> },
+            { path: '/mypage/edit', element: <MyPageEdit /> },
+            { path: '/subscription', element: <SubscriptionPage /> },
+        ]
+    },
 
     {
         element: <AdminRoute />,
@@ -42,11 +50,6 @@ const router = createBrowserRouter([
             { path: '/admin', element: <AdminPage /> },
         ]
     },
-
-    { path: '/mypage', element: <MyPage /> },
-    { path: '/mypage/edit', element: <MyPageEdit /> },
-
-    { path: '/subscription', element: <SubscriptionPage /> },
 
 ]);
 

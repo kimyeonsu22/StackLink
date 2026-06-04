@@ -16,7 +16,7 @@ const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
         <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
             {/* 로고 */}
             <Link to="/" className="text-purple-600 text-xl font-bold">
-                Stack Link
+                StackLink
             </Link>
 
             {/* 검색바 */}
