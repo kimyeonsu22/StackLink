@@ -23,8 +23,9 @@ const LoginForm = () => {
             localStorage.setItem('nickname', nickname);
             const decoded = jwtDecode(accessToken);
             localStorage.setItem('userId', decoded.sub);
-            localStorage.setItem('role', decoded.role);
-            navigate('/');
+            const role = decoded.role;
+            localStorage.setItem('role', role);
+            navigate(role === 'ROLE_ADMIN' ? '/admin' : '/');
         } catch (err) {
             setError('이메일 또는 비밀번호가 올바르지 않습니다.');
         }

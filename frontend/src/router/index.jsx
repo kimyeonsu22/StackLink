@@ -19,6 +19,7 @@ import MyPageEdit from '../pages/MyPage/MyPageEdit';
 
 // 관리자 페이지
 import AdminPage from '../pages/Admin/AdminPage';
+import AdminRoute from './AdminRoute';
 
 // 구독
 import SubscriptionPage from '../pages/Subscription/SubscriptionPage';
@@ -35,7 +36,12 @@ const router = createBrowserRouter([
     { path: '/projects/:id/apply', element: <ProjectApplyPage /> },
     { path: '/projects/:id/applicants', element: <ProjectManagePage /> },
 
-    { path: '/admin', element: <AdminPage /> },
+    {
+        element: <AdminRoute />,
+        children: [
+            { path: '/admin', element: <AdminPage /> },
+        ]
+    },
 
     { path: '/mypage', element: <MyPage /> },
     { path: '/mypage/edit', element: <MyPageEdit /> },
