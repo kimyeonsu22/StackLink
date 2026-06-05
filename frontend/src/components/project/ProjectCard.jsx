@@ -11,7 +11,7 @@ const ProjectCard = ({ project }) => {
             onClick={() => navigate(`/projects/${project.id}`)}
             className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-purple-300 transition"
         >
-            <h3 className="font-semibold text-sm mb-2">{project.title}</h3>
+            <h3 className="font-semibold text-sm mb-2">{project.projectname}</h3>
 
             {/* 태그 */}
             <div className="flex flex-wrap gap-1 mb-3">
@@ -26,9 +26,8 @@ const ProjectCard = ({ project }) => {
             </div>
 
             {/* 하단 정보 */}
-            <div className="flex justify-between items-center text-xs text-gray-400">
-                <span>{project.position}</span>
-                <span>{project.deadline}</span>
+            <div className="flex justify-end items-center text-xs text-gray-400">
+                <span>{project.deadlineAt?.slice(0, 10)}</span>
             </div>
         </div>
     );

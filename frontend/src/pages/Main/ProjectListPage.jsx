@@ -1,6 +1,6 @@
 // 프로젝트 리스트 화면
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -8,16 +8,42 @@ import ProjectListCard from '../../components/project/ProjectListCard';
 import Pagination from '../../components/common/Pagination';
 import AiRecommendTop5 from '../../components/project/AiRecommendTop5';
 import SubscribePrompt from '../../components/project/SubscribePrompt';
-import { projects, aiRecommendProjects, currentUser } from '../../data/dummy';
+import { getProjects } from '../../api/project';
+import { checkSubscription, getAiMatching } from '../../api/ai';
+import { getMyProfile } from '../../api/user';
 
 const PAGE_SIZE = 5;
 
 const ProjectListPage = () => {
+  const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [aiProjects, setAiProjects] = useState([]);
   const navigate = useNavigate();
 
-  // TODO: 백엔드 인증 API 연동 후 실제 구독 여부로 교체
-  const isSubscribed = currentUser.isSubscribed;
+  useEffect(() => {
+    getProjects().then((res) => setProjects(res.data));
+
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      checkSubscription(userId).then((res) => {
+        const subscribed = res.data.isSubscribed;
+        setIsSubscribed(subscribed);
+        if (subscribed) {
+          getMyProfile().then((profileRes) => {
+            const techStack = profileRes.data.techStack ?? {};
+            const techString = Object.keys(techStack).join(',');
+            getAiMatching(userId, techString).then((aiRes) => {
+              setAiProjects(aiRes.data.map((p) => ({
+                id: p.projectId,
+                projectname: p.projectName,
+              })));
+            }).catch(() => {});
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+  }, []);
 
   const totalPages = Math.ceil(projects.length / PAGE_SIZE);
   const currentProjects = projects.slice(
@@ -68,7 +94,7 @@ const ProjectListPage = () => {
                 </div>
 
                 {isSubscribed
-                    ? <AiRecommendTop5 projects={aiRecommendProjects} />
+                    ? <AiRecommendTop5 projects={aiProjects} />
                     : <SubscribePrompt />
                 }
               </div>
