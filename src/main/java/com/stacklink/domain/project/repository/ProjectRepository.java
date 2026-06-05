@@ -44,6 +44,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     void softDeleteById(@Param("id") Long id);
 
     long countByIsDeleted(boolean isDeleted);
+    long countByIsClosedAndIsDeleted(boolean isClosed, boolean isDeleted);
     long countByIsClosed(boolean isClosed);
     long countByAuthor_IdAndIsDeletedFalse(Long authorId);
 

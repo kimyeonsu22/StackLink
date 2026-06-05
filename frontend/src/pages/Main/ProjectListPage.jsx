@@ -19,6 +19,7 @@ const ProjectListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [aiProjects, setAiProjects] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const ProjectListPage = () => {
         const subscribed = res.data.isSubscribed;
         setIsSubscribed(subscribed);
         if (subscribed) {
+          setAiLoading(true);
           getMyProfile().then((profileRes) => {
             const techStack = profileRes.data.techStack ?? {};
             const techString = Object.keys(techStack).join(',');
@@ -40,8 +42,8 @@ const ProjectListPage = () => {
                 reason: p.reason,
                 score: p.score,
               })));
-            }).catch(() => {});
-          }).catch(() => {});
+            }).catch(() => {}).finally(() => setAiLoading(false));
+          }).catch(() => setAiLoading(false));
         }
       }).catch(() => {});
     }
@@ -96,7 +98,7 @@ const ProjectListPage = () => {
                 </div>
 
                 {isSubscribed
-                    ? <AiRecommendTop5 projects={aiProjects} />
+                    ? <AiRecommendTop5 projects={aiProjects} loading={aiLoading} />
                     : <SubscribePrompt />
                 }
               </div>

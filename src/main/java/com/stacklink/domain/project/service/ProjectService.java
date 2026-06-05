@@ -207,7 +207,7 @@ public class ProjectService {
 
         return Map.of(
                 "total",     projectRepository.countByIsDeleted(false),
-                "active",    projectRepository.countByIsClosed(false),
+                "active",    projectRepository.countByIsClosedAndIsDeleted(false, false),
                 "applicants", total,
                 "matchRate", matchRate
         );

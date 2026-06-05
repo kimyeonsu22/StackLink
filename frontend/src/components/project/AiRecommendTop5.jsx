@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const AiRecommendTop5 = ({ projects }) => {
+const AiRecommendTop5 = ({ projects, loading }) => {
     const navigate = useNavigate();
     const [tooltip, setTooltip] = useState(null); // { project, x, y }
 
@@ -15,6 +15,16 @@ const AiRecommendTop5 = ({ projects }) => {
     return (
         <div className="bg-white border border-gray-200 rounded-xl p-4 w-60">
             <h3 className="text-sm font-bold text-purple-600 mb-3">🏆 AI 기반 나에게 맞는 TOP 5</h3>
+            {loading ? (
+                <div className="flex flex-col gap-2">
+                    {[1,2,3,4,5].map((i) => (
+                        <div key={i} className="flex items-center gap-2 p-1">
+                            <div className="w-4 h-3 bg-purple-100 rounded animate-pulse" />
+                            <div className="flex-1 h-3 bg-gray-100 rounded animate-pulse" />
+                        </div>
+                    ))}
+                </div>
+            ) : (
             <div className="flex flex-col gap-2">
                 {projects.map((project, index) => (
                     <div
@@ -29,6 +39,7 @@ const AiRecommendTop5 = ({ projects }) => {
                     </div>
                 ))}
             </div>
+            )}
 
             {tooltip && tooltip.project.reason && (
                 <div

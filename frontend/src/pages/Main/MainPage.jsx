@@ -19,6 +19,7 @@ const MainPage = () => {
     const [stats, setStats] = useState([]);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [aiProjects, setAiProjects] = useState([]);
+    const [aiLoading, setAiLoading] = useState(false);
 
     useEffect(() => {
         getTop5Projects().then((res) => setHotProjects(res.data));
@@ -42,6 +43,7 @@ const MainPage = () => {
                 const subscribed = res.data.isSubscribed;
                 setIsSubscribed(subscribed);
                 if (subscribed) {
+                    setAiLoading(true);
                     getMyProfile().then((profileRes) => {
                         const techStack = profileRes.data.techStack ?? {};
                         const techString = Object.keys(techStack).join(',');
@@ -52,8 +54,8 @@ const MainPage = () => {
                                 reason: p.reason,
                                 score: p.score,
                             })));
-                        }).catch(() => {});
-                    }).catch(() => {});
+                        }).catch(() => {}).finally(() => setAiLoading(false));
+                    }).catch(() => setAiLoading(false));
                 }
             }).catch(() => {});
         }
@@ -89,7 +91,7 @@ const MainPage = () => {
                         <div className="w-60 flex-shrink-0 flex flex-col gap-4">
                             <HotProjects projects={hotProjects} />
                             {isSubscribed
-                                ? <AiRecommendTop5 projects={aiProjects} />
+                                ? <AiRecommendTop5 projects={aiProjects} loading={aiLoading} />
                                 : <SubscribePrompt />
                             }
                         </div>
