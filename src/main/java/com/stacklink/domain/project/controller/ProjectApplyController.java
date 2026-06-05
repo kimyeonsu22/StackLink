@@ -73,7 +73,7 @@ public class ProjectApplyController {
     public ResponseEntity<String> acceptApplicant(Authentication authentication, @PathVariable Long projectId, @PathVariable Long userId) {
         Long loginUserId = Long.valueOf(authentication.getName());
 
-        projectApplyService.acceptApplicant(loginUserId, projectId, userId);
+        projectApplyService.acceptApplicant(userId, projectId, loginUserId);
 
         return ResponseEntity.ok("지원자를 팀원으로 등록했습니다.");
     }
