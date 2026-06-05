@@ -155,10 +155,15 @@ public class ProjectService {
     }
 
     // 공고 마감
-    public void closeProject(Long projectId) {
+    public void closeProject(Long userId, Long projectId) {
         Project project = projectRepository
                 .findByIdAndIsDeletedFalse(projectId)
                 .orElseThrow(() -> new RuntimeException("공고 없음"));
+
+        if (!project.getAuthor().getId().equals(userId)) {
+            throw new IllegalStateException("작성자만 마감할 수 있습니다.");
+        }
+
         project.setClosed(true);
         project.setUpdatedAt(LocalDateTime.now());
     }

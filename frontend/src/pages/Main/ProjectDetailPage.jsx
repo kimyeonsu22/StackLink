@@ -138,7 +138,7 @@ const ProjectDetailPage = () => {
                   </>
                 )}
 
-                {leader && <TeamLeaderCard leader={leader} />}
+                {!isOwner && leader && <TeamLeaderCard leader={leader} />}
                 <HotProjects projects={hotProjects} />
               </div>
 

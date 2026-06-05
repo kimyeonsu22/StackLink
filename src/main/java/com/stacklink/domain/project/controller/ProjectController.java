@@ -49,9 +49,16 @@ public class ProjectController {
         projectService.updateProject(projectId, request);
     }
 
+    // 프로젝트 마감
     @PatchMapping("/{projectId}/close")
-    public void close(@PathVariable Long projectId) {
-        projectService.closeProject(projectId);
+    public ResponseEntity<String> close(Authentication authentication, @PathVariable Long projectId) {
+        Long userId = Long.valueOf(authentication.getName());
+        try {
+            projectService.closeProject(userId, projectId);
+            return ResponseEntity.ok("공고가 마감되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{projectId}")
