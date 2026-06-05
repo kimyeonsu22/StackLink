@@ -9,40 +9,43 @@ import ProjectContent from '../../components/project/ProjectContent';
 import ReplySection from '../../components/project/ReplySection';
 import TeamLeaderCard from '../../components/project/TeamLeaderCard';
 import HotProjects from '../../components/project/HotProjects';
-import { projects, members, currentUser, applicants } from '../../data/dummy';
-import { getTop5Projects } from '../../api/project';
+import { getProject, getTop5Projects, deleteProject } from '../../api/project';
+import { toggleFavorite } from '../../api/favorites';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [project, setProject] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [hotProjects, setHotProjects] = useState([]);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     getTop5Projects().then((res) => setHotProjects(res.data));
-  }, []);
+    getProject(id)
+        .then((res) => setProject(res.data))
+        .catch(() => setNotFound(true));
+  }, [id]);
 
-  const project = projects.find(p => p.id === Number(id));
-  if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
+  if (notFound) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
+  if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">로딩 중...</div>;
 
-  const leader = members.find(m => m.nickname === project.author) ?? members[0];
-  const applyCount = applicants.filter(a => a.projectId === project.id).length;
-
-  // TODO: 백엔드 인증 연동 후 JWT에서 추출한 실제 유저 정보로 교체
-  const isOwner = currentUser.nickname === project.author;
+  const leader = { nickname: project.authorName };
+  const isOwner = localStorage.getItem('userId') === String(project.userId);
 
   const handleApply = () => {
     navigate(`/projects/${id}/apply`);
   };
 
   const handleDelete = () => {
-    // TODO: 백엔드 DELETE /api/projects/:id 연동 필요
-    console.log('공고 삭제:', id);
+    if (!window.confirm('공고를 삭제하시겠습니까?')) return;
+    deleteProject(id).then(() => navigate('/projects'));
   };
 
   const handleLike = () => {
-    // TODO: 백엔드 /api/projects/:id/favorite 연동 필요
-    setIsLiked((prev) => !prev);
+    toggleFavorite(id).then((res) => {
+      setIsLiked(res.data.liked);
+    });
   };
 
   return (
@@ -64,7 +67,7 @@ const ProjectDetailPage = () => {
                 </button>
 
                 <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <ProjectInfo project={project} applyCount={applyCount} />
+                  <ProjectInfo project={project} applyCount={0} />
                 </div>
 
                 <ProjectContent project={project} />

@@ -10,12 +10,11 @@ const ProjectListCard = ({ project }) => {
             onClick={() => navigate(`/projects/${project.id}`)}
             className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-purple-300 transition flex flex-col gap-2"
         >
-            <h3 className="font-semibold text-gray-900">{project.title}</h3>
+            <h3 className="font-semibold text-gray-900">{project.projectname}</h3>
 
             <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                <span>{project.position}</span>
                 <span>{project.recruitCount}명</span>
-                <span>~{project.deadline}</span>
+                <span>~{project.deadlineAt?.slice(0, 10)}</span>
                 <span className="ml-auto">좋아요️ {project.favoriteCount}</span>
             </div>
 
@@ -34,7 +33,7 @@ const ProjectListCard = ({ project }) => {
         <span className={`px-2 py-0.5 rounded-full text-white text-xs ${project.isClosed ? 'bg-gray-400' : 'bg-purple-600'}`}>
           {project.isClosed ? '모집 완료' : '모집 중'}
         </span>
-                <span>{project.createdAt}</span>
+                <span>{project.createdAt?.slice(0, 10)}</span>
             </div>
         </div>
     );

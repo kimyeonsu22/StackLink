@@ -9,16 +9,20 @@ import AiRecommendTop5 from '../../components/project/AiRecommendTop5';
 import SubscribePrompt from '../../components/project/SubscribePrompt';
 import StatBar from '../../components/common/StatBar';
 import HotProjects from '../../components/project/HotProjects.jsx';
-import { projects, aiRecommendProjects, currentUser } from '../../data/dummy';
-import { getTop5Projects, getProjectStats } from '../../api/project';
+import { getProjects, getTop5Projects, getProjectStats } from '../../api/project';
+import { checkSubscription, getAiMatching } from '../../api/ai';
+import { getMyProfile } from '../../api/user';
 
 const MainPage = () => {
-    const isSubscribed = currentUser.isSubscribed;
+    const [projects, setProjects] = useState([]);
     const [hotProjects, setHotProjects] = useState([]);
     const [stats, setStats] = useState([]);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [aiProjects, setAiProjects] = useState([]);
 
     useEffect(() => {
         getTop5Projects().then((res) => setHotProjects(res.data));
+
         getProjectStats().then((res) => {
             const d = res.data;
             setStats([
@@ -28,6 +32,28 @@ const MainPage = () => {
                 { label: '매칭률', value: `${d.matchRate}%` },
             ]);
         });
+
+        getProjects().then((res) => setProjects(res.data));
+
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            checkSubscription(userId).then((res) => {
+                const subscribed = res.data.isSubscribed;
+                setIsSubscribed(subscribed);
+                if (subscribed) {
+                    getMyProfile().then((profileRes) => {
+                        const techStack = profileRes.data.techStack ?? {};
+                        const techString = Object.keys(techStack).join(',');
+                        getAiMatching(userId, techString).then((aiRes) => {
+                            setAiProjects(aiRes.data.map((p) => ({
+                                id: p.projectId,
+                                projectname: p.projectName,
+                            })));
+                        }).catch(() => {});
+                    }).catch(() => {});
+                }
+            }).catch(() => {});
+        }
     }, []);
 
     return (
@@ -60,7 +86,7 @@ const MainPage = () => {
                         <div className="w-60 flex-shrink-0 flex flex-col gap-4">
                             <HotProjects projects={hotProjects} />
                             {isSubscribed
-                                ? <AiRecommendTop5 projects={aiRecommendProjects} />
+                                ? <AiRecommendTop5 projects={aiProjects} />
                                 : <SubscribePrompt />
                             }
                         </div>

@@ -6,8 +6,11 @@ import com.stacklink.domain.project.dto.ProjectUpdateRequest;
 import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.entity.User;
 import com.stacklink.domain.project.enums.ApplicationStatus;
+import com.stacklink.domain.project.entity.TechProjects;
 import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.TechProjectsRepository;
+import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectApplyRepository projectApplyRepository;
+    private final TechProjectsRepository techProjectsRepository;
+    private final TechRepository techRepository;
 
     // 생성
     public Long createProject(
@@ -48,7 +53,17 @@ public class ProjectService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        return projectRepository.save(project).getId();
+        Project saved = projectRepository.save(project);
+
+        if (request.getTechIds() != null) {
+            request.getTechIds().forEach(techId ->
+                techRepository.findById(techId).ifPresent(tech ->
+                    techProjectsRepository.save(new TechProjects(tech, saved))
+                )
+            );
+        }
+
+        return saved.getId();
     }
 
     // 단건 조회
@@ -60,9 +75,15 @@ public class ProjectService {
 
         project.setViewCount(project.getViewCount() + 1);
 
+        List<String> tags = techProjectsRepository.findByProject_Id(project.getId())
+                .stream()
+                .map(tp -> tp.getTech().getTechName())
+                .toList();
+
         return ProjectResponse.builder()
                 .id(project.getId())
                 .userId(project.getAuthor().getId())
+                .authorName(project.getAuthor().getNickname())
                 .projectname(project.getProjectName())
                 .content(project.getContent())
                 .recruitCount(project.getRecruitCount())
@@ -70,6 +91,8 @@ public class ProjectService {
                 .viewCount(project.getViewCount())
                 .favoriteCount(project.getFavoriteCount())
                 .deadlineAt(project.getDeadlineAt())
+                .createdAt(project.getCreatedAt())
+                .tags(tags)
                 .build();
     }
 
@@ -79,19 +102,26 @@ public class ProjectService {
 
         return projectRepository.findByIsDeletedFalse()
                 .stream()
-                .map(p -> ProjectResponse.builder()
-                        .id(p.getId())
-                        .userId(p.getAuthor().getId())
-                        .authorName(p.getAuthor().getNickname())
-                        .projectname(p.getProjectName())
-                        .content(p.getContent())
-                        .recruitCount(p.getRecruitCount())
-                        .isClosed(p.isClosed())
-                        .viewCount(p.getViewCount())
-                        .favoriteCount(p.getFavoriteCount())
-                        .deadlineAt(p.getDeadlineAt())
-                        .createdAt(p.getCreatedAt())
-                        .build())
+                .map(p -> {
+                    List<String> tags = techProjectsRepository.findByProject_Id(p.getId())
+                            .stream()
+                            .map(tp -> tp.getTech().getTechName())
+                            .toList();
+                    return ProjectResponse.builder()
+                            .id(p.getId())
+                            .userId(p.getAuthor().getId())
+                            .authorName(p.getAuthor().getNickname())
+                            .projectname(p.getProjectName())
+                            .content(p.getContent())
+                            .recruitCount(p.getRecruitCount())
+                            .isClosed(p.isClosed())
+                            .viewCount(p.getViewCount())
+                            .favoriteCount(p.getFavoriteCount())
+                            .deadlineAt(p.getDeadlineAt())
+                            .createdAt(p.getCreatedAt())
+                            .tags(tags)
+                            .build();
+                })
                 .toList();
     }
 

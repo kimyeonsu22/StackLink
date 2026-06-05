@@ -11,7 +11,7 @@ const ProjectInfo = ({ project, applyCount = 0 }) => {
         </span>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{project.projectname}</h1>
 
             <div className="flex flex-wrap gap-2">
                 {project.tags?.map((tag) => (
@@ -24,7 +24,7 @@ const ProjectInfo = ({ project, applyCount = 0 }) => {
             <div className="flex items-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-purple-200" />
-                    <span className="text-gray-700">{project.author}</span>
+                    <span className="text-gray-700">{project.authorName}</span>
                     <span className="bg-purple-600 text-white text-xs px-2 py-0.5 rounded-full">팀 리더</span>
                 </div>
                 <span>조회수 {project.viewCount}</span>
