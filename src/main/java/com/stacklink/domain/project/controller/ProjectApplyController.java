@@ -80,8 +80,15 @@ public class ProjectApplyController {
 
     // 지원자 거절
     @PatchMapping("/{projectId}/applications/{userId}/reject")
-    public ResponseEntity<String> rejectApplicant(@PathVariable Long projectId, @PathVariable Long userId) {
-        projectApplyService.rejectApplicant(projectId, userId);
-        return ResponseEntity.ok("지원자를 거절했습니다.");
+    public ResponseEntity<String> rejectApplicant(Authentication authentication,
+                                                  @PathVariable Long projectId,
+                                                  @PathVariable Long userId) {
+        Long loginUserId = Long.valueOf(authentication.getName());
+        try {
+            projectApplyService.rejectApplicant(loginUserId, projectId, userId);
+            return ResponseEntity.ok("지원자를 거절했습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
     }
 }

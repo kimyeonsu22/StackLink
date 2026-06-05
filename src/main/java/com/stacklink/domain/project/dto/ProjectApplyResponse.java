@@ -19,7 +19,14 @@ public class ProjectApplyResponse {
     private String email;
     private String phoneNumber;
     private String userPosition;
-    private List<String> techStack;
+    private List<TechCareer> techStack;
+
+    @Getter
+    @Builder
+    public static class TechCareer {
+        private String tech;
+        private String career;
+    }
 
     public static ProjectApplyResponse from(ProjectApply apply, List<TechUsers> techUsers) {
         return ProjectApplyResponse.builder()
@@ -33,7 +40,10 @@ public class ProjectApplyResponse {
                 .phoneNumber(apply.getUser().getPhoneNumber())
                 .userPosition(apply.getUser().getPosition())
                 .techStack(techUsers.stream()
-                        .map(tu -> tu.getTech().getTechName())
+                        .map(tu -> TechCareer.builder()
+                                .tech(tu.getTech().getTechName())
+                                .career(tu.getCareer() != null ? tu.getCareer().getCareerDetail() : null)
+                                .build())
                         .toList())
                 .build();
     }

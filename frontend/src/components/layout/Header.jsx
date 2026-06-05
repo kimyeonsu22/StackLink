@@ -30,18 +30,29 @@ const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
 
             {/* 우측 프로필 */}
             <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{nickname}</span>님</span>
-                <Link to={profilePath}>
-                    <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
-                        <FiUser size={18} className="text-purple-600" />
-                    </div>
-                </Link>
-                <button
-                    onClick={handleLogout}
-                    className="text-sm text-gray-500 hover:text-red-500 transition"
-                >
-                    로그아웃
-                </button>
+                {nickname ? (
+                    <>
+                        <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{nickname}</span>님</span>
+                        <Link to={profilePath}>
+                            <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
+                                <FiUser size={18} className="text-purple-600" />
+                            </div>
+                        </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="text-sm text-gray-500 hover:text-red-500 transition"
+                        >
+                            로그아웃
+                        </button>
+                    </>
+                ) : (
+                    <Link
+                        to="/login"
+                        className="text-sm bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                    >
+                        로그인
+                    </Link>
+                )}
             </div>
         </header>
     );

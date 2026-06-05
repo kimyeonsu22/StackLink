@@ -42,6 +42,11 @@ public class ProjectApplyService {
         // 공고 존재 확인
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("해당 공고가 존재하지 않습니다."));
 
+        // 본인 공고 지원 불가
+        if (project.getAuthor().getId().equals(userId)) {
+            throw new IllegalStateException("본인이 작성한 공고에는 지원할 수 없습니다.");
+        }
+
         // 현재 모집 중인지 확인
         if(project.isClosed()){
             throw new IllegalStateException("모집이 마감된 공고입니다.");
@@ -99,7 +104,14 @@ public class ProjectApplyService {
 
     // 지원자 거절 로직 추가함
     @Transactional
-    public void rejectApplicant(Long projectId, Long userId) {
+    public void rejectApplicant(Long loginUserId, Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("프로젝트가 없습니다."));
+
+        if (!project.getAuthor().getId().equals(loginUserId)) {
+            throw new IllegalStateException("작성자만 거절할 수 있습니다.");
+        }
+
         ProjectApplyId applyId = new ProjectApplyId(userId, projectId);
         ProjectApply apply = projectApplyRepository.findById(applyId)
                 .orElseThrow(() -> new IllegalArgumentException("지원 내역이 없습니다."));

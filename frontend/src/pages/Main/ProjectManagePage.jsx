@@ -211,11 +211,12 @@ const ProjectManagePage = () => {
             </div>
 
             {selectedApplicant.techStack?.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {selectedApplicant.techStack.map((tech) => (
-                  <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
-                    {tech}
-                  </span>
+              <div className="flex flex-col gap-1">
+                {selectedApplicant.techStack.map((item) => (
+                  <div key={item.tech} className="flex items-center justify-between bg-purple-50 rounded-lg px-3 py-1.5">
+                    <span className="text-xs font-medium text-purple-600">{item.tech}</span>
+                    {item.career && <span className="text-xs text-gray-400">{item.career}</span>}
+                  </div>
                 ))}
               </div>
             )}

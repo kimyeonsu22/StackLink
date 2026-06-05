@@ -82,6 +82,13 @@ const LoginForm = () => {
             </div>
 
             <SocialLoginButtons />
+
+            <button
+                onClick={() => navigate('/')}
+                className="w-full mt-3 text-sm text-gray-400 hover:text-gray-600 transition"
+            >
+                비로그인으로 진행
+            </button>
         </div>
     );
 };
