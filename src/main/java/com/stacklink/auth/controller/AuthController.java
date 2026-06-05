@@ -43,4 +43,11 @@ public class AuthController {
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+
+    // AuthController
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        // (추후 RefreshToken 저장소 도입 시 여기서 폐기 처리)
+        return ResponseEntity.ok().build();
+    }
 }

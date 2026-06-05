@@ -18,14 +18,23 @@ const LoginForm = () => {
         setError('');
         try {
             const res = await login(email, password);
-            const { accessToken, nickname } = res.data;
+            // refreshToken 추가
+            const { accessToken, refreshToken, nickname } = res.data;
+
             localStorage.setItem('accessToken', accessToken);
+            if (refreshToken) {
+                localStorage.setItem('refreshToken', refreshToken);
+            }
             localStorage.setItem('nickname', nickname);
+
             const decoded = jwtDecode(accessToken);
             localStorage.setItem('userId', decoded.sub);
+
             const role = decoded.role;
             localStorage.setItem('role', role);
-            navigate(role === 'ROLE_ADMIN' ? '/admin' : '/');
+
+            // 뒤로가기로 로그인 페이지 재진입 방지 (replace: true)
+            navigate(role === 'ROLE_ADMIN' ? '/admin' : '/', { replace: true });
         } catch (err) {
             setError('이메일 또는 비밀번호가 올바르지 않습니다.');
         }
@@ -49,7 +58,7 @@ const LoginForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-{error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
                 <button
                     type="submit"
