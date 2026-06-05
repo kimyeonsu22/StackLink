@@ -2,7 +2,10 @@ package com.stacklink.domain.project.service;
 
 import com.stacklink.domain.project.dto.AdminProjectResponse;
 import com.stacklink.domain.project.dto.PageResponse;
+import com.stacklink.domain.project.enums.ApplicationStatus;
+import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.TechProjectsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import java.util.Map;
 public class AdminProjectService {
 
     private final ProjectRepository projectRepository;
+    private final TechProjectsRepository techProjectsRepository;
+    private final ProjectApplyRepository projectApplyRepository;
 
     public PageResponse<AdminProjectResponse> getProjects(String keyword, String filter, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -28,7 +33,11 @@ public class AdminProjectService {
         String kw = (keyword == null || keyword.isBlank()) ? null : keyword.trim();
         return PageResponse.of(
                 projectRepository.searchProjects(kw, isDeleted, isClosed, pageable)
-                        .map(AdminProjectResponse::fromEntity));
+                        .map(p -> AdminProjectResponse.fromEntity(
+                                p,
+                                techProjectsRepository.findByProject_Id(p.getId()),
+                                projectApplyRepository.countByIdProjectIdAndStatusNot(p.getId(), ApplicationStatus.REJECTED)
+                        )));
     }
 
     @Transactional
