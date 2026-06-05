@@ -55,9 +55,9 @@ public class ProjectService {
 
         Project saved = projectRepository.save(project);
 
-        if (request.getTechIds() != null) {
-            request.getTechIds().forEach(techId ->
-                techRepository.findById(techId).ifPresent(tech ->
+        if (request.getTechNames() != null) {
+            request.getTechNames().forEach(techName ->
+                techRepository.findByTechName(techName).ifPresent(tech ->
                     techProjectsRepository.save(new TechProjects(tech, saved))
                 )
             );
@@ -80,6 +80,8 @@ public class ProjectService {
                 .map(tp -> tp.getTech().getTechName())
                 .toList();
 
+        long applyCount = projectApplyRepository.countByIdProjectIdAndStatusNot(project.getId(), ApplicationStatus.REJECTED);
+
         return ProjectResponse.builder()
                 .id(project.getId())
                 .userId(project.getAuthor().getId())
@@ -93,6 +95,7 @@ public class ProjectService {
                 .deadlineAt(project.getDeadlineAt())
                 .createdAt(project.getCreatedAt())
                 .tags(tags)
+                .applyCount(applyCount)
                 .build();
     }
 
@@ -139,6 +142,24 @@ public class ProjectService {
         project.setContent(request.getContent());
         project.setRecruitCount(request.getRecruitCount());
         project.setDeadlineAt(request.getDeadlineAt());
+        project.setUpdatedAt(LocalDateTime.now());
+
+        if (request.getTechNames() != null) {
+            techProjectsRepository.deleteByProject_Id(projectId);
+            request.getTechNames().forEach(techName ->
+                techRepository.findByTechName(techName).ifPresent(tech ->
+                    techProjectsRepository.save(new TechProjects(tech, project))
+                )
+            );
+        }
+    }
+
+    // 공고 마감
+    public void closeProject(Long projectId) {
+        Project project = projectRepository
+                .findByIdAndIsDeletedFalse(projectId)
+                .orElseThrow(() -> new RuntimeException("공고 없음"));
+        project.setClosed(true);
         project.setUpdatedAt(LocalDateTime.now());
     }
 

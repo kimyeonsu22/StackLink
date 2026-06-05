@@ -1,5 +1,6 @@
 package com.stacklink.domain.project.controller;
 
+import com.stacklink.domain.project.dto.PublicUserResponse;
 import com.stacklink.domain.project.dto.UserResponse;
 import com.stacklink.domain.project.dto.UserUpdateRequest;
 import com.stacklink.domain.project.service.UserService;
@@ -16,6 +17,12 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    // 유저 공개 프로필 조회 (TeamLeaderCard용)
+    @GetMapping("/{userId}")
+    public ResponseEntity<PublicUserResponse> getPublicProfile(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getPublicProfile(userId));
+    }
 
     // 내 프로필 조회
     @GetMapping("/me")

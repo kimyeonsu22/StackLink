@@ -4,6 +4,10 @@ import api from './axios';
 export const getMyProfile = () =>
     api.get('/users/me');
 
+// 유저 공개 프로필 조회 (TeamLeaderCard용)
+export const getUserProfile = (userId) =>
+    api.get(`/users/${userId}`);
+
 // 회원정보 수정
 export const updateMyProfile = (data) =>
     api.put('/users/me', data);

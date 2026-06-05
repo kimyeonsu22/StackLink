@@ -10,12 +10,14 @@ import ReplySection from '../../components/project/ReplySection';
 import TeamLeaderCard from '../../components/project/TeamLeaderCard';
 import HotProjects from '../../components/project/HotProjects';
 import { getProject, getTop5Projects, deleteProject } from '../../api/project';
-import { toggleFavorite } from '../../api/favorites';
+import { toggleFavorite, getMyFavorites } from '../../api/favorites';
+import { getUserProfile } from '../../api/user';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const [leader, setLeader] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [hotProjects, setHotProjects] = useState([]);
   const [notFound, setNotFound] = useState(false);
@@ -23,14 +25,27 @@ const ProjectDetailPage = () => {
   useEffect(() => {
     getTop5Projects().then((res) => setHotProjects(res.data));
     getProject(id)
-        .then((res) => setProject(res.data))
+        .then((res) => {
+            setProject(res.data);
+            getUserProfile(res.data.userId)
+                .then((profileRes) => setLeader(profileRes.data))
+                .catch(() => {});
+        })
         .catch(() => setNotFound(true));
+
+    if (localStorage.getItem('accessToken')) {
+        getMyFavorites()
+            .then((res) => {
+                const liked = res.data.some((f) => f.id === Number(id));
+                setIsLiked(liked);
+            })
+            .catch(() => {});
+    }
   }, [id]);
 
   if (notFound) return <div className="flex items-center justify-center h-screen text-gray-500">존재하지 않는 공고입니다.</div>;
   if (!project) return <div className="flex items-center justify-center h-screen text-gray-500">로딩 중...</div>;
 
-  const leader = { nickname: project.authorName };
   const isOwner = localStorage.getItem('userId') === String(project.userId);
 
   const handleApply = () => {
@@ -44,7 +59,12 @@ const ProjectDetailPage = () => {
 
   const handleLike = () => {
     toggleFavorite(id).then((res) => {
-      setIsLiked(res.data.liked);
+      const liked = res.data.liked;
+      setIsLiked(liked);
+      setProject((prev) => ({
+        ...prev,
+        favoriteCount: liked ? prev.favoriteCount + 1 : prev.favoriteCount - 1,
+      }));
     });
   };
 
@@ -67,7 +87,7 @@ const ProjectDetailPage = () => {
                 </button>
 
                 <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <ProjectInfo project={project} applyCount={0} />
+                  <ProjectInfo project={project} applyCount={project.applyCount ?? 0} />
                 </div>
 
                 <ProjectContent project={project} />
@@ -83,6 +103,12 @@ const ProjectDetailPage = () => {
                       className="w-full bg-purple-600 text-white font-semibold py-3 rounded-xl hover:bg-purple-700 transition"
                     >
                       지원 관리
+                    </button>
+                    <button
+                      onClick={() => navigate(`/projects/${id}/edit`)}
+                      className="w-full bg-white text-purple-600 font-semibold py-3 rounded-xl border border-purple-300 hover:bg-purple-50 transition"
+                    >
+                      공고 수정
                     </button>
                     <button
                       onClick={handleDelete}
@@ -112,7 +138,7 @@ const ProjectDetailPage = () => {
                   </>
                 )}
 
-                <TeamLeaderCard leader={leader} />
+                {leader && <TeamLeaderCard leader={leader} />}
                 <HotProjects projects={hotProjects} />
               </div>
 

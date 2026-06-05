@@ -37,6 +37,8 @@ public class ProjectResponse {
     // !!!!! 기술 스택 담아야함 !!!!
     private List<String> tags;
 
+    private Long applyCount;
+
     public static ProjectResponse from(Project p) {
         return ProjectResponse.builder()
                 .id(p.getId())

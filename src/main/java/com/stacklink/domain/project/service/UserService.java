@@ -1,5 +1,6 @@
 package com.stacklink.domain.project.service;
 
+import com.stacklink.domain.project.dto.PublicUserResponse;
 import com.stacklink.domain.project.dto.UserResponse;
 import com.stacklink.domain.project.dto.UserUpdateRequest;
 import com.stacklink.domain.project.entity.Career;
@@ -7,6 +8,7 @@ import com.stacklink.domain.project.entity.Tech;
 import com.stacklink.domain.project.entity.TechUsers;
 import com.stacklink.domain.project.entity.User;
 import com.stacklink.domain.project.repository.CareerRepository;
+import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.UserFollowRepository;
@@ -30,6 +32,7 @@ public class UserService {
     private final TechRepository techRepository;
     private final CareerRepository careerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProjectRepository projectRepository;
 
     // 마이페이지에서 내 정보 읽어오기 위해 만든 서비스
     @Transactional(readOnly = true)
@@ -77,6 +80,24 @@ public class UserService {
                 techUsersRepository.save(new TechUsers(user, tech, career));
             }
         }
+    }
+
+    // 유저 공개 프로필 조회 (TeamLeaderCard용)
+    @Transactional(readOnly = true)
+    public PublicUserResponse getPublicProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
+
+        long followerCount = userFollowRepository.countByFollowing_Id(userId);
+        long projectCount = projectRepository.countByAuthor_IdAndIsDeletedFalse(userId);
+
+        return PublicUserResponse.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .position(user.getPosition())
+                .followerCount(followerCount)
+                .projectCount(projectCount)
+                .build();
     }
 
     // 닉네임 중복 확인

@@ -9,8 +9,8 @@ export const getProject = (projectId) =>
     api.get(`/projects/${projectId}`);
 
 // 공고 생성
-export const createProject = (userId, data) =>
-    api.post(`/projects?userId=${userId}`, data);
+export const createProject = (data) =>
+    api.post('/projects', data);
 
 // 공고 수정
 export const updateProject = (projectId, data) =>
@@ -51,6 +51,10 @@ export const rejectApplicant = (projectId, userId) =>
 // 핫한 공고 Top5
 export const getTop5Projects = () =>
     api.get('/projects/top5');
+
+// 공고 마감
+export const closeProject = (projectId) =>
+    api.patch(`/projects/${projectId}/close`);
 
 // 공개 통계
 export const getProjectStats = () =>
