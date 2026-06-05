@@ -75,9 +75,24 @@ public class ProjectService {
 
     // 전체 조회
     @Transactional(readOnly = true)
-    public List<Project> getProjects() {
+    public List<ProjectResponse> getProjects() {
 
-        return projectRepository.findByIsDeletedFalse();
+        return projectRepository.findByIsDeletedFalse()
+                .stream()
+                .map(p -> ProjectResponse.builder()
+                        .id(p.getId())
+                        .userId(p.getAuthor().getId())
+                        .authorName(p.getAuthor().getNickname())
+                        .projectname(p.getProjectName())
+                        .content(p.getContent())
+                        .recruitCount(p.getRecruitCount())
+                        .isClosed(p.isClosed())
+                        .viewCount(p.getViewCount())
+                        .favoriteCount(p.getFavoriteCount())
+                        .deadlineAt(p.getDeadlineAt())
+                        .createdAt(p.getCreatedAt())
+                        .build())
+                .toList();
     }
 
     // 수정
