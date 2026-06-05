@@ -80,7 +80,3 @@ openai:
     key: ${OPEN_AI_KEY}
     url: https://api.openai.com/v1/chat/completions
     model: gpt-4o-mini
-
-admin:
-  email: admin@stacklink.com
-  password: admin1234
