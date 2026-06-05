@@ -29,7 +29,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<Project> getProjects() {
+    public List<ProjectResponse> getProjects() {
         return projectService.getProjects();
     }
 

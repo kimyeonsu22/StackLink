@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: ${DB_PASSWORD}
+    password: "0000"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -77,6 +77,6 @@ logging:
 
 openai:
   api:
-    key: ${OPENAI_API_KEY}
+    key: sk-xxxxxxxxxxxxxxxx
     url: https://api.openai.com/v1/chat/completions
     model: gpt-4o-mini

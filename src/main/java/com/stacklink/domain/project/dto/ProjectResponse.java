@@ -31,6 +31,8 @@ public class ProjectResponse {
 
     private LocalDateTime deadlineAt;
 
+    private LocalDateTime createdAt;
+
     public static ProjectResponse from(Project p) {
         return ProjectResponse.builder()
                 .id(p.getId())
