@@ -49,7 +49,12 @@ const ProfileSection = ({ user }) => {
 
             {/* 프로필 정보 */}
             <div className="flex flex-col gap-1 flex-1">
-                <p className="font-bold text-gray-900 text-lg">{user.nickname}</p>
+                <div className="flex items-center gap-2">
+                    <p className="font-bold text-gray-900 text-lg">{user.nickname}</p>
+                    {user.pro && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                    )}
+                </div>
                 <p className="text-sm text-gray-500">{user.username}</p>
                 <p className="text-sm text-gray-500">{user.email}</p>
                 <div className="flex flex-wrap gap-1 mt-1">

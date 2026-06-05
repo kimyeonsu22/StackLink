@@ -37,6 +37,8 @@ const ProjectListPage = () => {
               setAiProjects(aiRes.data.map((p) => ({
                 id: p.projectId,
                 projectname: p.projectName,
+                reason: p.reason,
+                score: p.score,
               })));
             }).catch(() => {});
           }).catch(() => {});

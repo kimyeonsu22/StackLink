@@ -11,6 +11,7 @@ import com.stacklink.domain.project.repository.CareerRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.TechUsersRepository;
+import com.stacklink.domain.project.repository.SubStateRepository;
 import com.stacklink.domain.project.repository.UserFollowRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class UserService {
     private final CareerRepository careerRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProjectRepository projectRepository;
+    private final SubStateRepository subStateRepository;
 
     // 마이페이지에서 내 정보 읽어오기 위해 만든 서비스
     @Transactional(readOnly = true)
@@ -51,7 +53,9 @@ public class UserService {
                         tu -> tu.getCareer().getCareerDetail()
                 ));
 
-        return UserResponse.of(user, followerCount, followingCount, techStack);
+        boolean isPro = subStateRepository.existsByUserIdAndSubStateTrue(userId);
+
+        return UserResponse.of(user, followerCount, followingCount, techStack, isPro);
     }
 
     // 회원정보 수정
@@ -90,6 +94,7 @@ public class UserService {
 
         long followerCount = userFollowRepository.countByFollowing_Id(userId);
         long projectCount = projectRepository.countByAuthor_IdAndIsDeletedFalse(userId);
+        boolean isPro = subStateRepository.existsByUserIdAndSubStateTrue(userId);
 
         return PublicUserResponse.builder()
                 .id(user.getId())
@@ -97,6 +102,7 @@ public class UserService {
                 .position(user.getPosition())
                 .followerCount(followerCount)
                 .projectCount(projectCount)
+                .isPro(isPro)
                 .build();
     }
 

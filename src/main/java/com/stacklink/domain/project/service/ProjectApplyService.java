@@ -9,6 +9,7 @@ import com.stacklink.domain.project.enums.ApplicationStatus;
 import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectMemberRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
+import com.stacklink.domain.project.repository.SubStateRepository;
 import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,16 @@ public class ProjectApplyService {
     private final UserRepository userRepository;
     // 유저별 기술스택 조회해서 반환해주기 위함
     private final TechUsersRepository techUsersRepository;
+    private final SubStateRepository subStateRepository;
 
     @Autowired
-    public ProjectApplyService(ProjectApplyRepository projectApplyRepository, ProjectRepository projectRepository, ProjectMemberRepository projectMemberRepository, UserRepository userRepository, TechUsersRepository techUsersRepository) {
+    public ProjectApplyService(ProjectApplyRepository projectApplyRepository, ProjectRepository projectRepository, ProjectMemberRepository projectMemberRepository, UserRepository userRepository, TechUsersRepository techUsersRepository, SubStateRepository subStateRepository) {
         this.projectApplyRepository = projectApplyRepository;
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.userRepository = userRepository;
         this.techUsersRepository = techUsersRepository;
+        this.subStateRepository = subStateRepository;
     }
 
     // 공고 지원
@@ -98,7 +101,8 @@ public class ProjectApplyService {
         return applies.stream()
                 .map(apply -> ProjectApplyResponse.from(
                         apply,
-                        techUsersRepository.findByUser_Id(apply.getId().getUserId())))
+                        techUsersRepository.findByUser_Id(apply.getId().getUserId()),
+                        subStateRepository.existsByUserIdAndSubStateTrue(apply.getId().getUserId())))
                 .toList();
     }
 

@@ -3,6 +3,7 @@ package com.stacklink.domain.project.service;
 import com.stacklink.domain.project.dto.AdminUserResponse;
 import com.stacklink.domain.project.dto.PageResponse;
 import com.stacklink.domain.project.entity.Role;
+import com.stacklink.domain.project.repository.SubStateRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class AdminUserService {
 
     private final UserRepository userRepository;
+    private final SubStateRepository subStateRepository;
 
     public PageResponse<AdminUserResponse> getUsers(String keyword, String filter, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -26,7 +28,12 @@ public class AdminUserService {
         };
         String kw = (keyword == null || keyword.isBlank()) ? null : keyword.trim();
         return PageResponse.of(
-                userRepository.searchUsers(kw, isDeleted, pageable).map(AdminUserResponse::fromEntity));
+                userRepository.searchUsers(kw, isDeleted, pageable)
+                        .map(u -> AdminUserResponse.fromEntity(
+                                u,
+                                subStateRepository.existsByUserIdAndSubStateTrue(u.getId())
+                        ))
+        );
     }
 
     @Transactional

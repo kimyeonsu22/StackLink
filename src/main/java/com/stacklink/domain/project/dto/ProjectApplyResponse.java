@@ -20,6 +20,7 @@ public class ProjectApplyResponse {
     private String phoneNumber;
     private String userPosition;
     private List<TechCareer> techStack;
+    private boolean isPro;
 
     @Getter
     @Builder
@@ -28,7 +29,7 @@ public class ProjectApplyResponse {
         private String career;
     }
 
-    public static ProjectApplyResponse from(ProjectApply apply, List<TechUsers> techUsers) {
+    public static ProjectApplyResponse from(ProjectApply apply, List<TechUsers> techUsers, boolean isPro) {
         return ProjectApplyResponse.builder()
                 .userId(apply.getId().getUserId())
                 .projectId(apply.getId().getProjectId())
@@ -45,6 +46,7 @@ public class ProjectApplyResponse {
                                 .career(tu.getCareer() != null ? tu.getCareer().getCareerDetail() : null)
                                 .build())
                         .toList())
+                .isPro(isPro)
                 .build();
     }
 }

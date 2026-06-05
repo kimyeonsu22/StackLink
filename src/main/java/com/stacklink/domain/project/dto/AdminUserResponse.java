@@ -17,8 +17,9 @@ public class AdminUserResponse {
     private String role;
     private boolean isDeleted;
     private LocalDateTime createdAt;
+    private boolean isPro;
 
-    public static AdminUserResponse fromEntity(User u) {
+    public static AdminUserResponse fromEntity(User u, boolean isPro) {
         return AdminUserResponse.builder()
                 .id(u.getId())
                 .username(u.getUsername())
@@ -28,6 +29,7 @@ public class AdminUserResponse {
                 .role(u.getRole().name())
                 .isDeleted(u.isDeleted())
                 .createdAt(u.getCreatedAt())
+                .isPro(isPro)
                 .build();
     }
 }

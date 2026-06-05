@@ -164,7 +164,12 @@ const AdminPage = () => {
                       {member.nickname[0]}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-800">{member.nickname}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-semibold text-gray-800">{member.nickname}</p>
+                        {member.pro && (
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-400">{member.email}</p>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${member.deleted ? 'bg-red-100 text-red-500' : 'bg-green-100 text-green-600'}`}>

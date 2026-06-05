@@ -32,7 +32,12 @@ const TeamLeaderCard = ({ leader }) => {
                 <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-full bg-purple-200" />
                     <div>
-                        <p className="text-gray-900 text-sm font-semibold">{leader.nickname}</p>
+                        <div className="flex items-center gap-1">
+                            <p className="text-gray-900 text-sm font-semibold">{leader.nickname}</p>
+                            {leader.pro && (
+                                <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                            )}
+                        </div>
                         <p className="text-gray-400 text-xs">{leader.position}</p>
                     </div>
                 </div>
