@@ -3,22 +3,44 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FollowModal from './FollowModal';
+import { getFollowerList, getFollowingList, toggleFollow } from '../../api/follow';
 
 const ProfileSection = ({ user }) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState(null); // 'follower' | 'following' | null
+    const [followerList, setFollowerList] = useState([]);
+    const [followingList, setFollowingList] = useState([]);
+    const [followingIdSet, setFollowingIdSet] = useState(new Set()); // 내가 팔로우 중인 ID set
 
-    // TODO: 백엔드 팔로워/팔로잉 목록 API 연동 필요
-    const dummyFollowers = [
-        { id: 1, nickname: '김철수', position: '프론트엔드' },
-        { id: 2, nickname: '이영희', position: '백엔드' },
-        { id: 3, nickname: '박지훈', position: 'PM' },
-    ];
+    const handleOpenModal = async (type) => {
+        try {
+            if (type === 'follower') {
+                // 팔로워 모달 열 때 팔로잉 목록도 함께 조회 (맞팔 여부 확인용)
+                const [followerRes, followingRes] = await Promise.all([
+                    getFollowerList(user.id),
+                    getFollowingList(user.id),
+                ]);
+                setFollowerList(followerRes.data);
+                setFollowingList(followingRes.data);
+                setFollowingIdSet(new Set(followingRes.data.map((u) => u.id)));
+            } else {
+                const res = await getFollowingList(user.id);
+                setFollowingList(res.data);
+                setFollowingIdSet(new Set(res.data.map((u) => u.id)));
+            }
+            setModal(type);
+        } catch (err) {
+            console.error('팔로우 목록 조회 실패', err);
+        }
+    };
 
-    const dummyFollowing = [
-        { id: 1, nickname: '최민준', position: '백엔드' },
-        { id: 2, nickname: '정수연', position: '디자인' },
-    ];
+    const handleToggleFollow = async (targetId) => {
+        try {
+            await toggleFollow(targetId);
+        } catch (err) {
+            console.error('팔로우 토글 실패', err);
+        }
+    };
 
     return (
         <div className="bg-white border border-gray-200 rounded-xl p-6 flex items-center gap-8">
@@ -43,17 +65,17 @@ const ProfileSection = ({ user }) => {
             {/* 팔로워/팔로잉 */}
             <div className="flex gap-6">
                 <button
-                    onClick={() => setModal('follower')}
+                    onClick={() => handleOpenModal('follower')}
                     className="flex flex-col items-center hover:opacity-80 transition"
                 >
-                    <span className="text-2xl font-bold text-gray-900">{dummyFollowers.length}</span>
+                    <span className="text-2xl font-bold text-gray-900">{user.followerCount}</span>
                     <span className="text-xs text-gray-400">팔로워</span>
                 </button>
                 <button
-                    onClick={() => setModal('following')}
+                    onClick={() => handleOpenModal('following')}
                     className="flex flex-col items-center hover:opacity-80 transition"
                 >
-                    <span className="text-2xl font-bold text-gray-900">{dummyFollowing.length}</span>
+                    <span className="text-2xl font-bold text-gray-900">{user.followingCount}</span>
                     <span className="text-xs text-gray-400">팔로잉</span>
                 </button>
             </div>
@@ -70,8 +92,11 @@ const ProfileSection = ({ user }) => {
             {modal === 'follower' && (
                 <FollowModal
                     title="팔로워"
-                    list={dummyFollowers}
+                    list={followerList}
+                    type="follower"
+                    followingIdSet={followingIdSet}
                     onClose={() => setModal(null)}
+                    onToggleFollow={handleToggleFollow}
                 />
             )}
 
@@ -79,8 +104,10 @@ const ProfileSection = ({ user }) => {
             {modal === 'following' && (
                 <FollowModal
                     title="팔로잉"
-                    list={dummyFollowing}
+                    list={followingList}
+                    type="following"
                     onClose={() => setModal(null)}
+                    onToggleFollow={handleToggleFollow}
                 />
             )}
         </div>

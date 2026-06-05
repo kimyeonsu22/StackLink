@@ -11,8 +11,6 @@ public class ProjectCreateRequest {
 
     private String projectname;
 
-    private String title;
-
     private String content;
 
     private Integer recruitCount;

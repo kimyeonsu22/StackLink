@@ -1,3 +1,5 @@
+DELIMITER $$
+
 CREATE DEFINER=`root`@`localhost` TRIGGER `multiQuery_userUpdate_trigger` AFTER UPDATE ON `users` FOR EACH ROW BEGIN
 	-- users 테이블의 is_deleted 컬럼값이 true 가 되었을 경우
 	IF NEW.is_deleted = true AND OLD.is_deleted = false THEN
@@ -27,4 +29,6 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `multiQuery_userUpdate_trigger` AFTER 
         DELETE FROM follow
         where follow.user_id = NEW.id;
 	END IF;
-END
+END$$
+
+DELIMITER ;

@@ -38,6 +38,9 @@ public class User {
     @Column(nullable = false, length = 10)
     private Role role;
 
+    @Column(length = 20)
+    private String position;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -63,6 +66,21 @@ public class User {
     /** 소셜 로그인 시 닉네임 등 갱신 */
     public void updateOAuthInfo(String nickname) {
         this.nickname = nickname;
+    }
+
+    /** 회원정보 수정 */
+    public void updateProfile(String username, String nickname, String phoneNumber, String position) {
+        this.username = username;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.position = position;
+        this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    /** 비밀번호 변경 */
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
+        this.updatedAt = java.time.LocalDateTime.now();
     }
 
     /** 권한 변경 (관리자 기능용) */

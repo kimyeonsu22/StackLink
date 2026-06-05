@@ -23,4 +23,6 @@ public class SignupRequest {
     private String phoneNumber;
 
     private Role role;         // 폼에서 안 받으면 null → 서비스에서 APPLICANT 처리
+
+    private String position;
 }

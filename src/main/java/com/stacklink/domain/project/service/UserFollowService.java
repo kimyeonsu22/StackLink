@@ -46,19 +46,29 @@ public class UserFollowService {
     }
 
     // 내가 팔로우하는 사람 조회
+    // (마이 페이지 팔로우 리스트 출력 관련하여 수정함)
     @Transactional(readOnly = true)
     public List<FollowUserResponse> getFollowingList(Long userId){
         return userFollowRepository.findByFollower_Id(userId)
                 .stream()
-                .map(follow -> new FollowUserResponse(follow.getFollowing().getId(),follow.getFollowing().getUsername())).toList();
+                .map(follow -> new FollowUserResponse(
+                        follow.getFollowing().getId(),
+                        follow.getFollowing().getNickname(),
+                        follow.getFollowing().getPosition()
+                )).toList();
     }
 
     // 나를 팔로우하는 사람 조회
+    // (마이 페이지 팔로우 리스트 출력 관련하여 수정함)
     @Transactional(readOnly = true)
     public List<FollowUserResponse> getFollowerList(Long userId){
         return userFollowRepository.findByFollowing_Id(userId)
                 .stream()
-                .map(follow -> new FollowUserResponse(follow.getFollower().getId(), follow.getFollower().getUsername())).toList();
+                .map(follow -> new FollowUserResponse(
+                        follow.getFollower().getId(),
+                        follow.getFollower().getNickname(),
+                        follow.getFollower().getPosition()
+                )).toList();
     }
 
 }

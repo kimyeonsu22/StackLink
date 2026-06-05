@@ -1,3 +1,5 @@
+DELIMITER $$
+
 CREATE DEFINER=`root`@`localhost` TRIGGER `multiQuery_projectUpdate_trigger` AFTER UPDATE ON `project` FOR EACH ROW BEGIN
 	IF NEW.is_deleted = true AND OLD.is_deleted = false THEN
 		DELETE FROM project_apply
@@ -17,4 +19,6 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `multiQuery_projectUpdate_trigger` AFT
 		DELETE FROM project_apply
         WHERE project_apply.project_id = NEW.id;
 	END IF;
-END
+END$$
+
+DELIMITER ;

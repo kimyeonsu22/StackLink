@@ -1,5 +1,5 @@
 
-const ApplySuccessModal = ({displayOption}) => {
+const ApplySuccessModal = ({displayOption, resText}) => {
 
     // x 버튼, 확인 버튼 클릭 시 모달 hidden 처리 함수
     const toggleModal = () => {
@@ -16,7 +16,7 @@ const ApplySuccessModal = ({displayOption}) => {
                     &times;
                 </button>
 
-                <h2 className="text-xl font-bold mb-4">지원 성공</h2>
+                <h2 className="text-xl font-bold mb-4">{resText}</h2>
                 <p className="text-gray-600 mb-6">
                     프로젝트 참여 지원에 성공했습니다!
                 </p>

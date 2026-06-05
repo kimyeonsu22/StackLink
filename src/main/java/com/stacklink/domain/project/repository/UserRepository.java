@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     @Query("""
     SELECT u FROM User u
     WHERE (:keyword IS NULL OR u.nickname LIKE %:keyword%

@@ -20,7 +20,8 @@ public class UserFollowController {
     public ResponseEntity<Boolean> toggleFollow(@PathVariable Long followingId, Authentication authentication) {
         Long followerId = Long.valueOf(authentication.getName());
 
-        boolean following = userFollowService.toggleFollow(followingId, followerId);
+        // follower, followin 인자 거꾸로 되어 있었어서 수정
+        boolean following = userFollowService.toggleFollow(followerId, followingId);
 
         return ResponseEntity.ok(following);
     }

@@ -16,7 +16,7 @@ const HotProjects = ({ projects }) => {
                         className="flex items-center gap-2 cursor-pointer hover:bg-orange-50 rounded p-1 transition"
                     >
                         <span className="text-orange-500 font-bold text-sm w-4">{index + 1}</span>
-                        <span className="text-xs text-gray-700 truncate">{project.title}</span>
+                        <span className="text-xs text-gray-700 truncate">{project.projectname}</span>
                     </div>
                 ))}
             </div>

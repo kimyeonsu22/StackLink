@@ -16,6 +16,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findByIsDeletedFalse();
 
+    List<Project> findByAuthor_IdAndIsDeletedFalse(Long authorId);
+
     Optional<Project> findByIdAndIsDeletedFalse(Long id);
 
     // AI 매칭용 - 삭제 안됐고 마감 안된 공고만 조회

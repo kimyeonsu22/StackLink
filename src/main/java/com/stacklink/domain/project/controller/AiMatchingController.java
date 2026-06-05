@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ai")
+@RequestMapping("/api/ai")
 public class AiMatchingController {
 
     private final AiMatchingService aiMatchingService;

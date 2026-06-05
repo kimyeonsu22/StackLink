@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
     ADMIN("ROLE_ADMIN"),
-    RECRUITER("ROLE_RECRUITER"),
+    //RECRUITER("ROLE_RECRUITER"), -> 사용안해서 수정, 관리자가 아닌 회원은 그냥 applicant로 구분
     APPLICANT("ROLE_APPLICANT");
 
     private final String key;

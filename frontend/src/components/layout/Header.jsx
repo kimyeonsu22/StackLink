@@ -1,15 +1,22 @@
 // 상단바
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
-import { currentUser } from '../../data/dummy';
 
 const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
+    const navigate = useNavigate();
+    const nickname = localStorage.getItem('nickname');
+
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
             {/* 로고 */}
             <Link to="/" className="text-purple-600 text-xl font-bold">
-                Stack Link
+                StackLink
             </Link>
 
             {/* 검색바 */}
@@ -21,14 +28,20 @@ const Header = ({ showSearch = true, profilePath = '/mypage' }) => {
                 />
             )}
 
-            {/* 우측 프로필*/}
+            {/* 우측 프로필 */}
             <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{currentUser.nickname}</span>님</span>
+                <span className="text-sm text-gray-600">안녕하세요 <span className="font-semibold text-purple-600">{nickname}</span>님</span>
                 <Link to={profilePath}>
                     <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center hover:opacity-80 transition">
                         <FiUser size={18} className="text-purple-600" />
                     </div>
                 </Link>
+                <button
+                    onClick={handleLogout}
+                    className="text-sm text-gray-500 hover:text-red-500 transition"
+                >
+                    로그아웃
+                </button>
             </div>
         </header>
     );

@@ -7,7 +7,7 @@ const menus = [
     { label: '홈', icon: <FiHome />, path: '/' },
     { label: '모집 공고', icon: <FiList />, path: '/projects' },
     { label: '공고 작성하기', icon: <FiEdit />, path: '/projects/create' },
-    { label: '알림', icon: <FiBell />, path: '/notifications' },
+    // { label: '알림', icon: <FiBell />, path: '/notifications' },
     { label: '프리미엄', icon: <FiStar />, path: '/subscription' },
 ];
 

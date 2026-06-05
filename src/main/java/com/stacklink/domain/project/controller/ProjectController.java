@@ -6,13 +6,16 @@ import com.stacklink.domain.project.dto.ProjectUpdateRequest;
 import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -52,10 +55,23 @@ public class ProjectController {
         projectService.deleteProject(projectId);
     }
 
+    // 내가 올린 공고 목록
+    // 일단 jwt 토큰 방식 인증 방식으로 수정
+    @GetMapping("/my")
+    public ResponseEntity<List<ProjectResponse>> getMyProjects(Authentication authentication) {
+        Long userId = Long.valueOf(authentication.getName());
+        return ResponseEntity.ok(projectService.getMyProjects(userId));
+    }
+
     // 핫한 공고 Top 5 (좋아요 * 2 + 지원자 수 * 5로 도출)
     @GetMapping("/top5")
     public List<ProjectResponse> getTop5Projects() {
         return projectService.getHotProjects();
     }
 
+    // 공개 통계 (전체 공고수, 모집중, 지원자 수, 매칭률)
+    @GetMapping("/stats")
+    public Map<String, Object> getStats() {
+        return projectService.getStats();
+    }
 }

@@ -5,6 +5,8 @@ import com.stacklink.domain.project.dto.ProjectResponse;
 import com.stacklink.domain.project.dto.ProjectUpdateRequest;
 import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.entity.User;
+import com.stacklink.domain.project.enums.ApplicationStatus;
+import com.stacklink.domain.project.repository.ProjectApplyRepository;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final ProjectApplyRepository projectApplyRepository;
 
     // 생성
     public Long createProject(
@@ -33,7 +37,6 @@ public class ProjectService {
         Project project = Project.builder()
                 .author(user)
                 .projectName(request.getProjectname())
-                .title(request.getTitle())
                 .content(request.getContent())
                 .recruitCount(request.getRecruitCount())
                 .deadlineAt(request.getDeadlineAt())
@@ -61,7 +64,6 @@ public class ProjectService {
                 .id(project.getId())
                 .userId(project.getAuthor().getId())
                 .projectname(project.getProjectName())
-                .title(project.getTitle())
                 .content(project.getContent())
                 .recruitCount(project.getRecruitCount())
                 .isClosed(project.isClosed())
@@ -89,7 +91,6 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("공고 없음"));
 
         project.setProjectName(request.getProjectname());
-        project.setTitle(request.getTitle());
         project.setContent(request.getContent());
         project.setRecruitCount(request.getRecruitCount());
         project.setDeadlineAt(request.getDeadlineAt());
@@ -105,6 +106,40 @@ public class ProjectService {
 
         project.setDeleted(true);
         project.setUpdatedAt(LocalDateTime.now());
+    }
+
+    // 내가 올린 공고 목록
+    @Transactional(readOnly = true)
+    public List<ProjectResponse> getMyProjects(Long userId) {
+        return projectRepository.findByAuthor_IdAndIsDeletedFalse(userId)
+                .stream()
+                .map(p -> ProjectResponse.builder()
+                        .id(p.getId())
+                        .userId(p.getAuthor().getId())
+                        .projectname(p.getProjectName())
+                        .content(p.getContent())
+                        .recruitCount(p.getRecruitCount())
+                        .isClosed(p.isClosed())
+                        .viewCount(p.getViewCount())
+                        .favoriteCount(p.getFavoriteCount())
+                        .deadlineAt(p.getDeadlineAt())
+                        .build())
+                .toList();
+    }
+
+    // 공개 통계
+    @Transactional(readOnly = true)
+    public Map<String, Object> getStats() {
+        long total = projectApplyRepository.count();
+        long accepted = projectApplyRepository.countByStatus(ApplicationStatus.ACCEPTED);
+        long matchRate = total == 0 ? 0 : Math.round((double) accepted / total * 100);
+
+        return Map.of(
+                "total",     projectRepository.countByIsDeleted(false),
+                "active",    projectRepository.countByIsClosed(false),
+                "applicants", total,
+                "matchRate", matchRate
+        );
     }
 
     // 핫한 공고 Top 5

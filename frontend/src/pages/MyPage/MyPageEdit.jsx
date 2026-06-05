@@ -1,43 +1,85 @@
 // 마이페이지 수정
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Accordion from '../../components/common/Accordion';
 import TechStackSelector from '../../components/common/TechStackSelector';
 import InputField from '../../components/common/InputField';
-// TODO: 백엔드 API 연동 후 실제 유저 데이터로 교체
-import { currentUser } from '../../data/dummy';
+import { getMyProfile, updateMyProfile, checkNickname, checkPhone } from '../../api/user';
 
 const POSITION_LIST = ['백엔드', '프론트엔드', 'PM', 'DB', '디자인'];
 
 const MyPageEdit = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(currentUser.username);
-  const [nickname, setNickname] = useState(currentUser.nickname);
-  const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber);
+  const [username, setUsername] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [position, setPosition] = useState(currentUser.position);
-  const [selectedTechs, setSelectedTechs] = useState(currentUser.techStack);
+  const [position, setPosition] = useState('');
+  const [selectedTechs, setSelectedTechs] = useState({});
+  const [nicknameMsg, setNicknameMsg] = useState('');
+  const [phoneMsg, setPhoneMsg] = useState('');
 
-  const handleNicknameCheck = () => {
-    // TODO: 백엔드 닉네임 중복 확인 API 필요
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await getMyProfile();
+        const user = res.data;
+        setUsername(user.username);
+        setNickname(user.nickname);
+        setPhoneNumber(user.phoneNumber ?? '');
+        setPosition(user.position ?? '');
+        setSelectedTechs(user.techStack ?? {});
+      } catch (err) {
+        console.error('유저 정보 조회 실패', err);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleNicknameCheck = async () => {
+    try {
+      const res = await checkNickname(nickname);
+      setNicknameMsg(res.data.available ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.');
+    } catch {
+      setNicknameMsg('확인 중 오류가 발생했습니다.');
+    }
   };
 
-  const handlePhoneCheck = () => {
-    // TODO: 백엔드 전화번호 중복 확인 API 필요
+  const handlePhoneCheck = async () => {
+    try {
+      const res = await checkPhone(phoneNumber);
+      setPhoneMsg(res.data.available ? '사용 가능한 전화번호입니다.' : '이미 사용 중인 전화번호입니다.');
+    } catch {
+      setPhoneMsg('확인 중 오류가 발생했습니다.');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password && password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
-    // TODO: 백엔드 회원정보 수정 API 연동 필요
-    console.log({ username, nickname, phoneNumber, password, position, selectedTechs });
+    try {
+      await updateMyProfile({
+        username,
+        nickname,
+        phoneNumber,
+        password: password || null,
+        position,
+        techStack: selectedTechs,
+      });
+      localStorage.setItem('nickname', nickname);
+      alert('정보가 수정되었습니다.');
+      navigate('/mypage');
+    } catch (err) {
+      alert('정보 수정에 실패했습니다.');
+      console.error(err);
+    }
   };
 
   return (
@@ -66,39 +108,53 @@ const MyPageEdit = () => {
                   </div>
 
                   {/* 닉네임 */}
-                  <InputField
-                      label="닉네임"
-                      type="text"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                      rightButton={
-                          <button
-                              type="button"
-                              onClick={handleNicknameCheck}
-                              className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
-                          >
-                              중복 확인
-                          </button>
-                      }
-                  />
+                  <div className="flex flex-col gap-1">
+                    <InputField
+                        label="닉네임"
+                        type="text"
+                        value={nickname}
+                        onChange={(e) => { setNickname(e.target.value); setNicknameMsg(''); }}
+                        rightButton={
+                            <button
+                                type="button"
+                                onClick={handleNicknameCheck}
+                                className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
+                            >
+                                중복 확인
+                            </button>
+                        }
+                    />
+                    {nicknameMsg && (
+                        <p className={`text-xs ${nicknameMsg.includes('가능') ? 'text-green-500' : 'text-red-500'}`}>
+                          {nicknameMsg}
+                        </p>
+                    )}
+                  </div>
 
                   {/* 전화번호 */}
-                  <InputField
-                      label="전화번호"
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="010-1234-5678"
-                      rightButton={
-                          <button
-                              type="button"
-                              onClick={handlePhoneCheck}
-                              className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
-                          >
-                              중복 확인
-                          </button>
-                      }
-                  />
+                  <div className="flex flex-col gap-1">
+                    <InputField
+                        label="전화번호"
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => { setPhoneNumber(e.target.value); setPhoneMsg(''); }}
+                        placeholder="010-1234-5678"
+                        rightButton={
+                            <button
+                                type="button"
+                                onClick={handlePhoneCheck}
+                                className="bg-purple-600 text-white text-xs px-3 rounded hover:bg-purple-700 transition"
+                            >
+                                중복 확인
+                            </button>
+                        }
+                    />
+                    {phoneMsg && (
+                        <p className={`text-xs ${phoneMsg.includes('가능') ? 'text-green-500' : 'text-red-500'}`}>
+                          {phoneMsg}
+                        </p>
+                    )}
+                  </div>
 
                   {/* 비밀번호 */}
                   <div className="flex flex-col gap-1">
@@ -107,7 +163,7 @@ const MyPageEdit = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="변경할 비밀번호 입력"
+                        placeholder="변경할 비밀번호 입력 (변경 안 할 경우 공란)"
                         className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
                     />
                   </div>
