@@ -22,9 +22,10 @@ public class ProjectController {
 
     @PostMapping
     public Long create(
-            @RequestParam Long userId,
+            Authentication authentication,
             @RequestBody ProjectCreateRequest request
     ) {
+        Long userId = Long.valueOf(authentication.getName());
         return projectService.createProject(userId, request);
     }
 
@@ -46,6 +47,11 @@ public class ProjectController {
             @RequestBody ProjectUpdateRequest request
     ) {
         projectService.updateProject(projectId, request);
+    }
+
+    @PatchMapping("/{projectId}/close")
+    public void close(@PathVariable Long projectId) {
+        projectService.closeProject(projectId);
     }
 
     @DeleteMapping("/{projectId}")

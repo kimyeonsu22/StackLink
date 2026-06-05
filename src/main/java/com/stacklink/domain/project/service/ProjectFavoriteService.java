@@ -23,19 +23,20 @@ public class ProjectFavoriteService {
     private final UserRepository userRepository;
 
     public boolean toggleFavorite(Long projectId, Long userId) {
-        ProjectFavoriteId id = new ProjectFavoriteId(projectId, userId);
+        ProjectFavoriteId id = new ProjectFavoriteId(userId, projectId);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("공고 없음"));
 
         if(projectFavoriteRepository.existsById(id)) {
             projectFavoriteRepository.deleteById(id);
+            project.setFavoriteCount(project.getFavoriteCount() - 1);
             return false;
         }
 
         User user = userRepository.getReferenceById(userId);
-        Project project = projectRepository.getReferenceById(projectId);
-
         ProjectFavorite favorite = new ProjectFavorite(user, project);
-
         projectFavoriteRepository.save(favorite);
+        project.setFavoriteCount(project.getFavoriteCount() + 1);
         return true;
     }
 

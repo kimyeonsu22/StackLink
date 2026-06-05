@@ -19,5 +19,5 @@ public class ProjectCreateRequest {
     private LocalDateTime deadlineAt;
 
     // !!! 필요한 기술 스택 담아야 함 !!!!
-    private List<Long> techIds;
+    private List<String> techNames;
 }

@@ -45,6 +45,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     long countByIsDeleted(boolean isDeleted);
     long countByIsClosed(boolean isClosed);
+    long countByAuthor_IdAndIsDeletedFalse(Long authorId);
 
     @Query("""
         SELECT p

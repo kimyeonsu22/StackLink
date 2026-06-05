@@ -20,7 +20,7 @@ public class ProjectFavoriteController {
     public ResponseEntity<?> toggleFavorite(Authentication authentication, @PathVariable Long projectId){
         Long userId = Long.valueOf(authentication.getName());
 
-        boolean liked = projectFavoriteService.toggleFavorite(userId, projectId);
+        boolean liked = projectFavoriteService.toggleFavorite(projectId, userId);
 
         return ResponseEntity.ok(Map.of("liked", liked));
     }

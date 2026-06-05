@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Pagination from '../../components/common/Pagination';
-import { getProject, getApplicants, acceptApplicant, rejectApplicant } from '../../api/project';
+import { getProject, getApplicants, acceptApplicant, rejectApplicant, closeProject } from '../../api/project';
 
 const PAGE_SIZE = 6;
 
@@ -53,6 +53,12 @@ const ProjectManagePage = () => {
   const handleReject = async (userId) => {
     await rejectApplicant(id, userId);
     fetchApplicants();
+  };
+
+  const handleClose = async () => {
+    if (!window.confirm('공고를 마감하시겠습니까? 마감 후에는 지원을 받을 수 없습니다.')) return;
+    await closeProject(id);
+    setProject((prev) => ({ ...prev, isClosed: true }));
   };
 
   return (
@@ -144,12 +150,25 @@ const ProjectManagePage = () => {
             {/* 공고 정보 */}
             <div className="w-80 flex-shrink-0">
               <div className="bg-white rounded-2xl p-5 flex flex-col gap-3">
-                <h3 className="text-sm font-bold text-gray-900">{project.projectname}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-gray-900">{project.projectname}</h3>
+                  <span className={`text-xs px-2 py-0.5 rounded-full text-white ${project.isClosed ? 'bg-gray-400' : 'bg-purple-600'}`}>
+                    {project.isClosed ? '모집 완료' : '모집 중'}
+                  </span>
+                </div>
                 <p className="text-xs text-gray-500">{project.content}</p>
                 <div className="flex justify-between text-xs text-gray-400 border-t border-gray-100 pt-3">
                   <span>모집 인원: {project.recruitCount}명</span>
                   <span>마감: {project.deadlineAt?.slice(0, 10)}</span>
                 </div>
+                {!project.isClosed && (
+                  <button
+                    onClick={handleClose}
+                    className="w-full mt-1 text-sm border border-gray-300 text-gray-600 py-2 rounded-xl hover:bg-gray-50 transition"
+                  >
+                    공고 마감
+                  </button>
+                )}
               </div>
             </div>
 

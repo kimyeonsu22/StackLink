@@ -12,6 +12,7 @@ import ProjectDetailPage from '../pages/Main/ProjectDetailPage';
 import ProjectCreatePage from '../pages/Main/ProjectCreatePage';
 import ProjectApplyPage from '../pages/Main/ProjectApplyPage';
 import ProjectManagePage from '../pages/Main/ProjectManagePage';
+import ProjectEditPage from '../pages/Main/ProjectEditPage';
 
 // 마이페이지
 import MyPage from '../pages/MyPage/MyPage';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
             { path: '/projects/create', element: <ProjectCreatePage /> },
             { path: '/projects/:id/apply', element: <ProjectApplyPage /> },
             { path: '/projects/:id/applicants', element: <ProjectManagePage /> },
+            { path: '/projects/:id/edit', element: <ProjectEditPage /> },
             { path: '/mypage', element: <MyPage /> },
             { path: '/mypage/edit', element: <MyPageEdit /> },
             { path: '/subscription', element: <SubscriptionPage /> },
