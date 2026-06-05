@@ -14,9 +14,17 @@ public class ProjectCreateRequest {
 
     private String content;
 
+    private String projectCategory;
+
+    private String projectType;
+
     private Integer recruitCount;
 
     private LocalDateTime deadlineAt;
+
+    private LocalDateTime projectStartDate;
+
+    private LocalDateTime projectEndDate;
 
     // !!! 필요한 기술 스택 담아야 함 !!!!
     private List<String> techNames;

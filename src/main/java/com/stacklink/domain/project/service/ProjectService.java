@@ -43,6 +43,8 @@ public class ProjectService {
                 .author(user)
                 .projectName(request.getProjectname())
                 .content(request.getContent())
+                .projectType(request.getProjectType())
+                .projectCategory(request.getProjectCategory())
                 .recruitCount(request.getRecruitCount())
                 .deadlineAt(request.getDeadlineAt())
                 .isClosed(false)
@@ -51,6 +53,8 @@ public class ProjectService {
                 .isDeleted(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .projectStartDate(request.getProjectStartDate())
+                .projectEndDate(request.getProjectEndDate())
                 .build();
 
         Project saved = projectRepository.save(project);
@@ -88,6 +92,8 @@ public class ProjectService {
                 .authorName(project.getAuthor().getNickname())
                 .projectname(project.getProjectName())
                 .content(project.getContent())
+                .projectType(project.getProjectType())
+                .projectCategory(project.getProjectCategory())
                 .recruitCount(project.getRecruitCount())
                 .isClosed(project.isClosed())
                 .viewCount(project.getViewCount())
@@ -140,8 +146,12 @@ public class ProjectService {
 
         project.setProjectName(request.getProjectname());
         project.setContent(request.getContent());
+        project.setProjectType(request.getProjectType());
+        project.setProjectCategory(request.getProjectCategory());
         project.setRecruitCount(request.getRecruitCount());
         project.setDeadlineAt(request.getDeadlineAt());
+        project.setProjectStartDate(request.getProjectStartDate());
+        project.setProjectEndDate(request.getProjectEndDate());
         project.setUpdatedAt(LocalDateTime.now());
 
         if (request.getTechNames() != null) {
