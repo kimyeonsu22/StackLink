@@ -17,8 +17,8 @@ const adminMenus = [
   { label: '관리자 홈', icon: <FiHome />, path: '/admin' },
 ];
 
-const PROJECT_PAGE_SIZE = 5;
-const MEMBER_PAGE_SIZE = 7;
+const PROJECT_PAGE_SIZE = 6;
+const MEMBER_PAGE_SIZE = 8;
 
 const AdminPage = () => {
   const [projects, setProjects] = useState([]);
@@ -78,6 +78,7 @@ const AdminPage = () => {
     { label: '전체 공고수', value: projectStats.total ?? '-' },
     { label: '모집중', value: projectStats.active ?? '-' },
     { label: '마감 공고', value: projectStats.closed ?? '-' },
+    { label: '삭제된 공고', value: projectStats.deleted ?? '-' },
   ];
 
   const memberStatItems = [
@@ -114,7 +115,12 @@ const AdminPage = () => {
                     onClick={() => setSelectedProject(project)}
                     className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-purple-300 transition flex flex-col gap-2"
                   >
-                    <h3 className="font-semibold text-gray-900 text-sm">{project.projectName}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-gray-900 text-sm">{project.projectName}</h3>
+                      {project.isDeleted && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-500">삭제됨</span>
+                      )}
+                    </div>
                     <div className="flex justify-between items-center text-xs text-gray-400">
                       <span className={`px-2 py-0.5 rounded-full text-white ${project.isClosed ? 'bg-gray-400' : 'bg-purple-600'}`}>
                         {project.isClosed ? '모집 완료' : '모집 중'}
@@ -221,12 +227,23 @@ const AdminPage = () => {
             <div className="flex flex-col gap-2 text-sm text-gray-700">
               <p><span className="font-semibold">공고명:</span> {selectedProject.projectName}</p>
               <p><span className="font-semibold">작성자:</span> {selectedProject.authorNickname}</p>
+              <p><span className="font-semibold">상태:</span> {selectedProject.isClosed ? '모집 완료' : '모집 중'}</p>
               <p><span className="font-semibold">모집 인원:</span> {selectedProject.recruitCount}명</p>
+              <p><span className="font-semibold">지원자 수:</span> {selectedProject.applyCount}명</p>
               <p><span className="font-semibold">마감일:</span> {selectedProject.deadlineAt?.slice(0, 10)}</p>
               <p><span className="font-semibold">조회수:</span> {selectedProject.viewCount}</p>
-              <p><span className="font-semibold">즐겨찾기:</span> {selectedProject.favoriteCount}</p>
-              <p><span className="font-semibold">상태:</span> {selectedProject.isClosed ? '모집 완료' : '모집 중'}</p>
+              <p><span className="font-semibold">좋아요:</span> {selectedProject.favoriteCount}</p>
             </div>
+
+            {selectedProject.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {selectedProject.tags.map((tag) => (
+                  <span key={tag} className="bg-purple-100 text-purple-600 text-xs px-3 py-1 rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <div className="text-sm text-gray-600 bg-gray-50 rounded-xl p-4 whitespace-pre-wrap">
               {selectedProject.content}

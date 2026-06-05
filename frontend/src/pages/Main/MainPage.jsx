@@ -30,6 +30,7 @@ const MainPage = () => {
                 { label: '모집중', value: d.active },
                 { label: '지원자수', value: d.applicants },
                 { label: '매칭률', value: `${d.matchRate}%` },
+                // 매칭률 = 승인 수 ÷ (전체 - 거절)
             ]);
         });
 

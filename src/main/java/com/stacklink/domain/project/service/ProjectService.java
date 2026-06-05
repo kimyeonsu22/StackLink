@@ -201,7 +201,7 @@ public class ProjectService {
     // 공개 통계
     @Transactional(readOnly = true)
     public Map<String, Object> getStats() {
-        long total = projectApplyRepository.count();
+        long total = projectApplyRepository.countByStatusNot(ApplicationStatus.REJECTED);
         long accepted = projectApplyRepository.countByStatus(ApplicationStatus.ACCEPTED);
         long matchRate = total == 0 ? 0 : Math.round((double) accepted / total * 100);
 
