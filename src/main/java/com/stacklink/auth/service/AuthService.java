@@ -6,6 +6,12 @@ import com.stacklink.auth.dto.TokenResponse;
 import com.stacklink.auth.jwt.JwtTokenProvider;
 import com.stacklink.domain.project.entity.Role;
 import com.stacklink.domain.project.entity.User;
+import com.stacklink.domain.project.entity.Career;
+import com.stacklink.domain.project.entity.Tech;
+import com.stacklink.domain.project.entity.TechUsers;
+import com.stacklink.domain.project.repository.CareerRepository;
+import com.stacklink.domain.project.repository.TechRepository;
+import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +25,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
+    private final TechRepository techRepository;
+    private final CareerRepository careerRepository;
+    private final TechUsersRepository techUsersRepository;
 
     /**
      * 자체 회원가입 처리
@@ -51,6 +60,15 @@ public class AuthService {
                 .position(req.getPosition())
                 .build();
         userRepository.save(user);
+
+        if (req.getTechStack() != null) {
+            req.getTechStack().forEach((techName, careerDetail) -> {
+                techRepository.findByTechName(techName).ifPresent(tech -> {
+                    Career career = careerRepository.findByCareerDetail(careerDetail).orElse(null);
+                    techUsersRepository.save(new TechUsers(user, tech, career));
+                });
+            });
+        }
     }
 
     @Transactional(readOnly = true)

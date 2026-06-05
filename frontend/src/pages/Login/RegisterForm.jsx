@@ -44,8 +44,7 @@ const RegisterForm = () => {
                 phoneNumber: form.phoneNumber,
                 role: 'APPLICANT',
                 position: selectedPosition,
-                // TODO: 백엔드 SignupRequest에 techStack 추가되면 아래 주석 해제
-                // techStack: selectedTechs,
+                techStack: selectedTechs,
             });
             navigate('/login');
         } catch (err) {
