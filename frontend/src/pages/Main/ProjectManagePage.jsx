@@ -91,7 +91,12 @@ const ProjectManagePage = () => {
                       className="border border-gray-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:border-purple-300 hover:shadow-sm transition"
                     >
                       <div>
-                        <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
+                          {applicant.pro && (
+                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                          )}
+                        </div>
                         <p className="text-xs text-gray-400">{applicant.position}</p>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
@@ -134,7 +139,12 @@ const ProjectManagePage = () => {
                       className="border border-purple-200 bg-purple-50 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-sm transition"
                     >
                       <div>
-                        <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-semibold text-gray-800">{applicant.nickname}</p>
+                          {applicant.pro && (
+                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                          )}
+                        </div>
                         <p className="text-xs text-gray-400">{applicant.position}</p>
                       </div>
                       <span className="text-xs bg-purple-600 text-white px-3 py-1 rounded-full">
@@ -199,7 +209,12 @@ const ProjectManagePage = () => {
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-purple-200 flex-shrink-0" />
               <div className="flex flex-col gap-1">
-                <p className="font-bold text-gray-900">{selectedApplicant.nickname}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-gray-900">{selectedApplicant.nickname}</p>
+                  {selectedApplicant.pro && (
+                    <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-semibold">PRO</span>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500">{selectedApplicant.email} · {selectedApplicant.phoneNumber}</p>
                 <p className="text-sm text-gray-500">{selectedApplicant.userPosition}</p>
               </div>

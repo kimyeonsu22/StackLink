@@ -22,8 +22,9 @@ public class UserResponse {
     private long followerCount;
     private long followingCount;
     private Map<String, String> techStack; // { techName: careerDetail }
+    private boolean isPro;
 
-    public static UserResponse of(User user, long followerCount, long followingCount, Map<String, String> techStack) {
+    public static UserResponse of(User user, long followerCount, long followingCount, Map<String, String> techStack, boolean isPro) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -35,6 +36,7 @@ public class UserResponse {
                 .followerCount(followerCount)
                 .followingCount(followingCount)
                 .techStack(techStack)
+                .isPro(isPro)
                 .build();
     }
 }

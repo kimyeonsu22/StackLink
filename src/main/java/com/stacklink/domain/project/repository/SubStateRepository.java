@@ -10,4 +10,6 @@ public interface SubStateRepository extends JpaRepository<SubState, Long> {
     Optional<SubState> findByUserId(Long userId);
 
     boolean existsByUserId(Long userId);
+
+    boolean existsByUserIdAndSubStateTrue(Long userId);
 }

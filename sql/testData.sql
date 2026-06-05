@@ -127,4 +127,17 @@ INSERT INTO project_tech (tech_id, project_id) VALUES
 (15, 8), (14, 8), (19, 8), (2, 8),
 (6, 9), (7, 9), (5, 9);
 
+-- ===== project_apply (지원 데이터) =====
+-- project 1 (김민우 작성): 나머지 유저 전원 APPLIED
+-- 이수연(3), 박지훈(4) 은 PRO 구독자 / 최준혁(5)~오다은(10) 은 일반 유저
+INSERT INTO project_apply (user_id, project_id, status, applied_at, content, position) VALUES
+(3,  1, 'APPLIED', NOW(), '프론트엔드 경험을 살려 React와 TypeScript로 UI를 담당하고 싶습니다.', '프론트엔드'),
+(4,  1, 'APPLIED', NOW(), 'Spring Boot와 JPA 실무 경험이 있습니다. 백엔드 파트를 맡고 싶습니다.', '백엔드'),
+(5,  1, 'APPLIED', NOW(), 'Kotlin과 Spring Boot로 사이드 프로젝트를 진행한 경험이 있습니다.', '백엔드'),
+(6,  1, 'APPLIED', NOW(), 'Vue.js 경험이 있고 JavaScript에 능숙합니다. 프론트엔드를 담당하고 싶습니다.', '프론트엔드'),
+(7,  1, 'APPLIED', NOW(), 'JAVA와 React 모두 다룰 수 있습니다. 풀스택으로 기여하고 싶습니다.', '풀스택'),
+(8,  1, 'APPLIED', NOW(), '일정 관리와 요구사항 정리 경험이 있습니다. PM 포지션으로 지원합니다.', 'PM'),
+(9,  1, 'APPLIED', NOW(), 'React와 TypeScript 프로젝트 경험이 많습니다. 프론트엔드를 맡고 싶습니다.', '프론트엔드'),
+(10, 1, 'APPLIED', NOW(), 'DB 설계와 SQL 최적화 경험이 있습니다. 데이터 파트를 담당하고 싶습니다.', 'DB');
+
 -- follow 초기 상태 (데이터 없음)

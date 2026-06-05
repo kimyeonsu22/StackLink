@@ -5,6 +5,11 @@ import com.stacklink.domain.project.entity.Project;
 import com.stacklink.domain.project.entity.SubState;
 import com.stacklink.domain.project.repository.ProjectRepository;
 import com.stacklink.domain.project.repository.SubStateRepository;
+import com.stacklink.domain.project.repository.TechProjectsRepository;
+import com.stacklink.domain.project.repository.TechUsersRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -21,6 +26,8 @@ public class AiMatchingService {
 
     private final ProjectRepository projectRepository;
     private final SubStateRepository subStateRepository;
+    private final TechProjectsRepository techProjectsRepository;
+    private final TechUsersRepository techUsersRepository;
     private final RestTemplate restTemplate;
 
     @Value("${openai.api.key}")
@@ -48,21 +55,32 @@ public class AiMatchingService {
             return Collections.emptyList();
         }
 
-        String prompt = buildPrompt(userTechStack, projects);
+        // 경력 포함 기술스택 문자열 생성 (예: "Spring Boot(3년이상~5년미만), JAVA(3년이상~5년미만)")
+        String techWithCareer = techUsersRepository.findByUser_Id(userId).stream()
+                .map(tu -> tu.getTech().getTechName() +
+                        (tu.getCareer() != null ? "(" + tu.getCareer().getCareerDetail() + ")" : ""))
+                .collect(java.util.stream.Collectors.joining(", "));
+
+        String prompt = buildPrompt(techWithCareer.isBlank() ? userTechStack : techWithCareer, projects);
         String aiResponse = callOpenAi(prompt);
         return parseAiResponse(aiResponse, projects);
     }
 
+    // 프롬프트 수정
     private String buildPrompt(String userTechStack, List<Project> projects) {
         StringBuilder sb = new StringBuilder();
         sb.append("사용자의 기술스택: ").append(userTechStack).append("\n\n");
         sb.append("현재 모집 중인 프로젝트 목록:\n");
         for (Project p : projects) {
+            String tags = techProjectsRepository.findByProject_Id(p.getId()).stream()
+                    .map(tp -> tp.getTech().getTechName())
+                    .collect(java.util.stream.Collectors.joining(", "));
             sb.append("- ID: ").append(p.getId())
                     .append(", 프로젝트명: ").append(p.getProjectName())
+                    .append(", 요구기술: ").append(tags.isBlank() ? "없음" : tags)
                     .append(", 내용: ").append(p.getContent()).append("\n");
         }
-        sb.append("\n위 사용자에게 가장 적합한 프로젝트 3개를 추천해줘. ");
+        sb.append("\n위 사용자에게 가장 적합한 프로젝트 5개를 추천해줘. ");
         sb.append("반드시 아래 JSON 배열 형식으로만 응답해줘. 다른 텍스트는 절대 포함하지 마:\n");
         sb.append("[{\"projectId\": 1, \"reason\": \"추천이유\", \"score\": 0.95}]");
         return sb.toString();
@@ -94,17 +112,16 @@ public class AiMatchingService {
         return response.getBody();
     }
 
-    @SuppressWarnings("unchecked")
     private List<AiMatchingResponse> parseAiResponse(String aiResponse, List<Project> projects) {
         try {
-            RestTemplate rt = new RestTemplate();
-            Map<String, Object> responseMap = rt.getForObject("data:application/json," + aiResponse, Map.class);
+            ObjectMapper mapper = new ObjectMapper();
 
-            List<Map<String, Object>> choices = (List<Map<String, Object>>) responseMap.get("choices");
-            Map<String, Object> messageMap = (Map<String, Object>) choices.get(0).get("message");
-            String content = (String) messageMap.get("content");
+            JsonNode root = mapper.readTree(aiResponse);
+            String content = root.path("choices").get(0).path("message").path("content").asText();
 
-            List<Map<String, Object>> recommendations = rt.getForObject("data:application/json," + content, List.class);
+            List<Map<String, Object>> recommendations = mapper.readValue(
+                    content, new TypeReference<List<Map<String, Object>>>() {}
+            );
 
             List<AiMatchingResponse> result = new ArrayList<>();
 

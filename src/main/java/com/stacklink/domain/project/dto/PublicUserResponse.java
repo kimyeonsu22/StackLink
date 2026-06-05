@@ -13,4 +13,5 @@ public class PublicUserResponse {
     private String position;
     private long followerCount;
     private long projectCount;
+    private boolean isPro;
 }
