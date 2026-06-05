@@ -25,4 +25,6 @@ public class SignupRequest {
     private Role role;         // 폼에서 안 받으면 null → 서비스에서 APPLICANT 처리
 
     private String position;
+
+    private java.util.Map<String, String> techStack; // { "React.js": "1년 미만", ... }
 }
