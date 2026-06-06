@@ -65,8 +65,13 @@ public class ProjectApplyService {
         }
 
         // 지원서작성
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
         ProjectApply apply = new ProjectApply();
         apply.setId(projectApplyId);
+        apply.setProject(project);
+        apply.setUser(user);
         apply.setStatus(ApplicationStatus.APPLIED);
         apply.setApplyAt(LocalDateTime.now());
         apply.setContent(req.getContent());

@@ -4,6 +4,7 @@ import SelfIntroduction from "./SelfIntroduction.jsx";
 import ApplySuccessModal from "./ApplySuccessModal.jsx";
 import ApplyFailModal from "./ApplyFailModal.jsx";
 import ApplyOmissionModal from "./ApplyOmissionModal.jsx";
+import { applyProject } from "../../api/project.js";
 
 const ProjectApplyForm = ({projectId}) => {
     const [selectedPositions, setSelectedPositions] = useState('');
@@ -33,37 +34,17 @@ const ProjectApplyForm = ({projectId}) => {
         // selectedPositions, selfIntroduction 의 값이 '' 일 때 요청 거부 modal 출력
         if (selectedPositions === '' || selfIntroduction === '') {
             setOmissionModal('block');
-        } else{
-            fetch(`/api/projects/${projectId}/apply`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(response => {
-                /* response.status == 200 인 경우 ApplySuccessModal 컴포넌트를 호출하고
-                 response.status == 401 인 경우 ApplyFailModal 컴포넌트를 호출한다.
-                 */
-                const data = response.text();
-                if (response.status === 200) {
-                    data.then(text => {
-                            setSuccessModal('block');
-                            setResText(text);
-                        }
-                    );
-                } else if (response.status === 400) {
-                    data.then(text => {
-                            setFailModal('block');
-                            setResText(text);
-                        }
-                    );
-                }
-            }).catch(
-                // 네트워크 및 설정 에러 시
-                error => {
-                    console.error('Error:', error);
-                }
-            )
+        } else {
+            applyProject(projectId, data)
+                .then((res) => {
+                    setSuccessModal('block');
+                    setResText(res.data);
+                })
+                .catch((err) => {
+                    const msg = err.response?.data?.message || err.response?.data || '지원에 실패했습니다.';
+                    setFailModal('block');
+                    setResText(msg);
+                });
         }
 
 

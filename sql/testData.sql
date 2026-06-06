@@ -77,22 +77,22 @@ INSERT INTO tech_users (user_id, tech_id, career_id) VALUES
 --       recruit_count, is_closed, view_count, favorite_count,
 --       created_at, updated_at, deadline_at, project_start, project_end, is_deleted
 INSERT INTO project (user_id, projectname, content, project_category, project_type, recruit_count, is_closed, view_count, favorite_count, created_at, updated_at, deadline_at, project_start, project_end, is_deleted) VALUES
--- id=1: 김민우(2) - 조회수/좋아요/지원자 많은 인기 공고
+-- id=1: 김민우(2)
 (2,  'AI 기반 학습 관리 플랫폼 개발',
  'AI 기반으로 개인 맞춤형 학습 경로를 추천해주는 학습 관리 플랫폼을 개발하고 있습니다. 함께 성장할 팀원을 모집합니다.',
- 'AI/ML', '사이드 프로젝트', 3, false, 356, 42,
+ 'AI/ML', '사이드 프로젝트', 3, false, 0, 0,
  NOW(), NOW(), '2026-08-30 00:00:00', '2026-07-01 00:00:00', '2026-12-31 00:00:00', false),
 
 -- id=2: 이수연(3)
 (3,  '쇼핑몰 리뉴얼 프로젝트',
  '기존 쇼핑몰 서비스를 React 기반으로 전면 리뉴얼하는 프로젝트입니다. UI/UX 개선에 관심 있는 분을 모집합니다.',
- '웹 개발', '사이드 프로젝트', 2, false, 124, 18,
+ '웹 개발', '사이드 프로젝트', 2, false, 0, 0,
  NOW(), NOW(), '2026-07-31 00:00:00', '2026-08-01 00:00:00', '2026-11-30 00:00:00', false),
 
 -- id=3: 박지훈(4)
 (4,  '실시간 협업 문서 편집 도구',
  '구글 독스와 같은 실시간 협업 문서 편집 도구를 직접 구현해보는 프로젝트입니다.',
- '웹 개발', '취업 / 창업', 4, false, 89, 11,
+ '웹 개발', '취업 / 창업', 4, false, 0, 0,
  NOW(), NOW(), '2026-09-15 00:00:00', '2026-08-15 00:00:00', '2027-02-28 00:00:00', false),
 
 -- id=4: 최준혁(5)
@@ -173,15 +173,6 @@ INSERT INTO project_apply (user_id, project_id, status, applied_at, content, pos
 (9,  1, 'APPLIED', NOW(), 'React와 TypeScript 프로젝트 경험이 많습니다. 프론트엔드를 맡고 싶습니다.', '프론트엔드'),
 (10, 1, 'APPLIED', NOW(), 'DB 설계와 SQL 최적화 경험이 있습니다. 데이터 파트를 담당하고 싶습니다.', 'DB');
 
--- ===== project_favorite (좋아요) =====
--- 이수연(3), 박지훈(4): project 1 좋아요
-INSERT INTO project_favorite (user_id, project_id) VALUES
-(3, 1),
-(4, 1);
+-- project_favorite, follow 초기 상태 (데이터 없음)
 
--- ===== follow =====
--- follow_id: 팔로우 당하는 사람, user_id: 팔로우 하는 사람
--- 이수연(3), 박지훈(4) → 김민우(2) 팔로우
-INSERT INTO follow (follow_id, user_id, created_at) VALUES
-(2, 3, NOW()),
-(2, 4, NOW());
+commit;
