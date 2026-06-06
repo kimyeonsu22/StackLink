@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    List<Project> findByIsDeletedFalse();
+    List<Project> findByIsDeletedFalseOrderByCreatedAtDesc();
 
     List<Project> findByAuthor_IdAndIsDeletedFalse(Long authorId);
 

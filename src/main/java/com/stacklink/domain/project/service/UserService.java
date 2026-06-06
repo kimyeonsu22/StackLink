@@ -14,6 +14,7 @@ import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.SubStateRepository;
 import com.stacklink.domain.project.repository.UserFollowRepository;
 import com.stacklink.domain.project.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,11 @@ public class UserService {
         long projectCount = projectRepository.countByAuthor_IdAndIsDeletedFalse(userId);
         boolean isPro = subStateRepository.existsByUserIdAndSubStateTrue(userId);
 
+        List<String> techStack = techUsersRepository.findByUser_Id(userId)
+                .stream()
+                .map(tu -> tu.getTech().getTechName())
+                .toList();
+
         return PublicUserResponse.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
@@ -103,6 +109,7 @@ public class UserService {
                 .followerCount(followerCount)
                 .projectCount(projectCount)
                 .isPro(isPro)
+                .techStack(techStack)
                 .build();
     }
 

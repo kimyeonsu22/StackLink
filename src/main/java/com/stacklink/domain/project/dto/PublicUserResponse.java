@@ -2,6 +2,7 @@ package com.stacklink.domain.project.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import java.util.List;
 
 // 공고 상세 페이지 오른쪽 화면에 띄워주기 위함
 @Getter
@@ -14,4 +15,5 @@ public class PublicUserResponse {
     private long followerCount;
     private long projectCount;
     private boolean isPro;
+    private List<String> techStack;
 }

@@ -24,8 +24,12 @@ const ProjectEditPage = () => {
             setForm({
                 projectname: p.projectname,
                 content: p.content,
+                projectCategory: p.projectCategory ?? '',
+                projectType: p.projectType ?? '',
                 recruitCount: p.recruitCount,
                 deadlineAt: p.deadlineAt?.slice(0, 10) ?? '',
+                projectStartDate: p.projectStart?.slice(0, 10) ?? '',
+                projectEndDate: p.projectEnd?.slice(0, 10) ?? '',
                 techNames: p.tags ?? [],
             });
         });
@@ -54,8 +58,12 @@ const ProjectEditPage = () => {
         const data = {
             projectname: form.projectname,
             content: form.content,
+            projectCategory: form.projectCategory,
+            projectType: form.projectType,
             recruitCount: Number(form.recruitCount),
             deadlineAt: new Date(form.deadlineAt).toISOString(),
+            projectStartDate: new Date(form.projectStartDate).toISOString(),
+            projectEndDate: new Date(form.projectEndDate).toISOString(),
             techNames: form.techNames,
         };
 
@@ -99,6 +107,37 @@ const ProjectEditPage = () => {
 
                                 <div className="flex gap-4">
                                     <div className="flex flex-col gap-1 flex-1">
+                                        <label className="text-sm font-semibold text-gray-700">카테고리</label>
+                                        <select
+                                            name="projectCategory"
+                                            value={form.projectCategory}
+                                            onChange={handleChange}
+                                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
+                                        >
+                                            <option value="">선택</option>
+                                            {['웹 개발', '모바일 앱', 'AI/ML', '백엔드', '게임', '디자인', '기타'].map((c) => (
+                                                <option key={c} value={c}>{c}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-1 flex-1">
+                                        <label className="text-sm font-semibold text-gray-700">유형</label>
+                                        <select
+                                            name="projectType"
+                                            value={form.projectType}
+                                            onChange={handleChange}
+                                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
+                                        >
+                                            <option value="">선택</option>
+                                            {['사이드 프로젝트', '해커톤', '스터디 / 교육', '취업 / 창업'].map((t) => (
+                                                <option key={t} value={t}>{t}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <div className="flex flex-col gap-1 flex-1">
                                         <label className="text-sm font-semibold text-gray-700">모집 인원</label>
                                         <input
                                             type="number"
@@ -115,6 +154,29 @@ const ProjectEditPage = () => {
                                             type="date"
                                             name="deadlineAt"
                                             value={form.deadlineAt}
+                                            onChange={handleChange}
+                                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <div className="flex flex-col gap-1 flex-1">
+                                        <label className="text-sm font-semibold text-gray-700">시작 예정일</label>
+                                        <input
+                                            type="date"
+                                            name="projectStartDate"
+                                            value={form.projectStartDate}
+                                            onChange={handleChange}
+                                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1 flex-1">
+                                        <label className="text-sm font-semibold text-gray-700">종료 예정일</label>
+                                        <input
+                                            type="date"
+                                            name="projectEndDate"
+                                            value={form.projectEndDate}
                                             onChange={handleChange}
                                             className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
                                         />

@@ -119,12 +119,21 @@ const ProjectDetailPage = () => {
                   </>
                 ) : (
                   <>
-                    <button
-                      onClick={handleApply}
-                      className="w-full bg-purple-600 text-white font-semibold py-3 rounded-xl hover:bg-purple-700 transition"
-                    >
-                      지원하기
-                    </button>
+                    {project.isClosed ? (
+                      <button
+                        disabled
+                        className="w-full bg-gray-300 text-gray-500 font-semibold py-3 rounded-xl cursor-not-allowed"
+                      >
+                        모집 완료
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleApply}
+                        className="w-full bg-purple-600 text-white font-semibold py-3 rounded-xl hover:bg-purple-700 transition"
+                      >
+                        지원하기
+                      </button>
+                    )}
                     <button
                       onClick={handleLike}
                       className={`w-full font-semibold py-3 rounded-xl border transition ${

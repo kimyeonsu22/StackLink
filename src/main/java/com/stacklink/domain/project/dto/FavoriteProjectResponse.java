@@ -14,6 +14,8 @@ public class FavoriteProjectResponse {
     private String projectname;
     private Boolean isClosed;
     private LocalDateTime deadlineAt;
+    private String projectCategory;
+    private String projectType;
 
     public static FavoriteProjectResponse from(ProjectFavorite pf) {
         return FavoriteProjectResponse.builder()
@@ -21,6 +23,8 @@ public class FavoriteProjectResponse {
                 .projectname(pf.getProject().getProjectName())
                 .isClosed(pf.getProject().isClosed())
                 .deadlineAt(pf.getProject().getDeadlineAt())
+                .projectCategory(pf.getProject().getProjectCategory())
+                .projectType(pf.getProject().getProjectType())
                 .build();
     }
 }

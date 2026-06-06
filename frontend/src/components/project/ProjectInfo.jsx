@@ -2,13 +2,20 @@
 const ProjectInfo = ({ project, applyCount = 0 }) => {
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex gap-2">
-        <span className="bg-purple-600 text-white text-xs px-3 py-1 rounded-full">
-          {project.isClosed ? '모집 완료' : '모집 중'}
-        </span>
-                <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
-          팀 프로젝트
-        </span>
+            <div className="flex flex-wrap gap-2">
+                <span className={`text-white text-xs px-3 py-1 rounded-full ${project.isClosed ? 'bg-gray-400' : 'bg-purple-600'}`}>
+                    {project.isClosed ? '모집 완료' : '모집 중'}
+                </span>
+                {project.projectCategory && (
+                    <span className="bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
+                        {project.projectCategory}
+                    </span>
+                )}
+                {project.projectType && (
+                    <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
+                        {project.projectType}
+                    </span>
+                )}
             </div>
 
             <h1 className="text-2xl font-bold text-gray-900">{project.projectname}</h1>
@@ -30,8 +37,13 @@ const ProjectInfo = ({ project, applyCount = 0 }) => {
                 <span>조회수 {project.viewCount}</span>
                 <span>좋아요️ {project.favoriteCount}</span>
                 <span>현재지원자 {applyCount} / {project.recruitCount}</span>
-                <span className="ml-auto text-gray-400">마감일 {project.deadlineAt}</span>
+                <span className="ml-auto text-gray-400">마감일 {project.deadlineAt?.slice(0, 10)}</span>
             </div>
+            {project.projectStart && project.projectEnd && (
+                <div className="text-xs text-gray-400">
+                    진행 기간 {project.projectStart?.slice(0, 10)} ~ {project.projectEnd?.slice(0, 10)}
+                </div>
+            )}
         </div>
     );
 };

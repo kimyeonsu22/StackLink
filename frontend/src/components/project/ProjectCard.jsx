@@ -26,8 +26,14 @@ const ProjectCard = ({ project }) => {
             </div>
 
             {/* 하단 정보 */}
-            <div className="flex justify-end items-center text-xs text-gray-400">
-                <span>{project.deadlineAt?.slice(0, 10)}</span>
+            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                {project.projectCategory && (
+                    <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-600">{project.projectCategory}</span>
+                )}
+                {project.projectType && (
+                    <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{project.projectType}</span>
+                )}
+                <span className="ml-auto text-gray-400">{project.deadlineAt?.slice(0, 10)}</span>
             </div>
         </div>
     );

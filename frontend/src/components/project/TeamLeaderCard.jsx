@@ -53,10 +53,17 @@ const TeamLeaderCard = ({ leader }) => {
                 </button>
             </div>
             <div className="flex gap-4 text-xs text-gray-400 mb-3">
-                <span>프로젝트 {leader.projectCount}</span>
                 <span>팔로워 {followerCount}</span>
             </div>
-            <p className="text-gray-500 text-xs">{leader.bio}</p>
+            {leader.techStack?.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                    {leader.techStack.map((tech) => (
+                        <span key={tech} className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

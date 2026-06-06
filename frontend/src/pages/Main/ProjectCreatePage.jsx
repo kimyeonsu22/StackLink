@@ -1,6 +1,6 @@
 // 프로젝트 생성 페이지
 import { useNavigate } from 'react-router-dom';
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/layout/Header.jsx";
 import Sidebar from "../../components/layout/Sidebar.jsx";
 import ProjectCategory from "../../components/project/ProjectCategory.jsx";
@@ -8,22 +8,8 @@ import ProjectType from "../../components/project/ProjectType.jsx";
 import TechStackSelector from "../../components/common/TechStackSelector.jsx";
 import TeamLeaderCard from "../../components/project/TeamLeaderCard.jsx";
 import HotProjects from "../../components/project/HotProjects.jsx";
-
-const dummyLeader = {
-  nickname: '김민우',
-  position: '백엔드 개발자',
-  projectCount: 12,
-  followerCount: 238,
-  bio: '교육과 기술의 연결을 꿈꾸는 백엔드 개발자입니다.',
-};
-
-const dummyHotProjects = [
-  { id: 1, title: 'AI 기반 기술 블로그 플랫폼 개발' },
-  { id: 2, title: '개발자 Q&A 커뮤니티 플랫폼' },
-  { id: 3, title: '실시간 협업 문서 편집 도구' },
-  { id: 4, title: '헬스케어 맞춤 관리 모바일 앱' },
-  { id: 5, title: '온라인 스터디 관리 플랫폼' },
-];
+import { createProject, getTop5Projects } from "../../api/project.js";
+import { getUserProfile } from "../../api/user.js";
 
 const ProjectCreatePage = () => {
   const navigate = useNavigate();
@@ -36,6 +22,17 @@ const ProjectCreatePage = () => {
   const [deadline, setDeadline] = useState('');
   const [projectStartDate, setProjectStartDate] = useState('');
   const [projectEndDate, setProjectEndDate] = useState('');
+
+  const [leader, setLeader] = useState(null);
+  const [hotProjects, setHotProjects] = useState([]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      getUserProfile(userId).then((res) => setLeader(res.data)).catch(() => {});
+    }
+    getTop5Projects().then((res) => setHotProjects(res.data)).catch(() => {});
+  }, []);
 
   const handleProjectName = (e) => {
     setProjectName(e.target.value);
@@ -81,30 +78,31 @@ const ProjectCreatePage = () => {
       techStack : selectedTechs,
     }
 
-    if(projectname === '' || content === '' || category === '' || type === '' || recruitcount === '' || deadline === '' || projectStartDate === '' || projectEndDate === ''){
+    if (projectname === '' || content === '' || category === '' || type === '' || recruitcount === '' || deadline === '' || projectStartDate === '' || projectEndDate === '') {
       alert("필수 값이 누락되었습니다.");
     } else {
-      const userId = 1;
-      fetch(`/api/projects?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }).then((response) => {
-        if (response.ok) {
-          // 성공 시 공고 목록 페이지로 돌아가기
+      const data = {
+        projectname,
+        content,
+        projectCategory: category,
+        projectType: type,
+        recruitCount: parseInt(recruitcount, 10),
+        deadlineAt: new Date(deadline).toISOString(),
+        projectStartDate: new Date(projectStartDate).toISOString(),
+        projectEndDate: new Date(projectEndDate).toISOString(),
+        techStack: selectedTechs,
+      };
+
+      createProject(data)
+        .then(() => {
           alert("공고 작성이 완료되었습니다.");
           navigate('/projects');
-        } else if (response.status === 409){
-          response.json().then(data => alert(data.message));
-        }
-      }).catch((error) => {
-        console.error('Error:', error);
-      })
+        })
+        .catch((err) => {
+          const msg = err.response?.data?.message || '공고 작성에 실패했습니다.';
+          alert(msg);
+        });
     }
-
-    console.log(formData);
   }
 
   return (
@@ -268,8 +266,8 @@ const ProjectCreatePage = () => {
               {/* 오른쪽 사이드 내용 */}
               <div className="w-60 flex-shrink-0 flex flex-col gap-4">
 
-                <TeamLeaderCard leader={dummyLeader} />
-                <HotProjects projects={dummyHotProjects} />
+                {leader && <TeamLeaderCard leader={leader} />}
+                {hotProjects.length > 0 && <HotProjects projects={hotProjects} />}
               </div>
             </div>
           </main>

@@ -108,6 +108,8 @@ public class ProjectService {
                 .favoriteCount(project.getFavoriteCount())
                 .deadlineAt(project.getDeadlineAt())
                 .createdAt(project.getCreatedAt())
+                .projectStart(project.getProjectStartDate())
+                .projectEnd(project.getProjectEndDate())
                 .tags(tags)
                 .applyCount(applyCount)
                 .build();
@@ -117,7 +119,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<ProjectResponse> getProjects() {
 
-        return projectRepository.findByIsDeletedFalse()
+        return projectRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
                 .stream()
                 .map(p -> {
                     List<String> tags = techProjectsRepository.findByProject_Id(p.getId())
@@ -130,12 +132,16 @@ public class ProjectService {
                             .authorName(p.getAuthor().getNickname())
                             .projectname(p.getProjectName())
                             .content(p.getContent())
+                            .projectCategory(p.getProjectCategory())
+                            .projectType(p.getProjectType())
                             .recruitCount(p.getRecruitCount())
                             .isClosed(p.isClosed())
                             .viewCount(p.getViewCount())
                             .favoriteCount(p.getFavoriteCount())
                             .deadlineAt(p.getDeadlineAt())
                             .createdAt(p.getCreatedAt())
+                            .projectStart(p.getProjectStartDate())
+                            .projectEnd(p.getProjectEndDate())
                             .tags(tags)
                             .build();
                 })
@@ -207,11 +213,15 @@ public class ProjectService {
                         .userId(p.getAuthor().getId())
                         .projectname(p.getProjectName())
                         .content(p.getContent())
+                        .projectCategory(p.getProjectCategory())
+                        .projectType(p.getProjectType())
                         .recruitCount(p.getRecruitCount())
                         .isClosed(p.isClosed())
                         .viewCount(p.getViewCount())
                         .favoriteCount(p.getFavoriteCount())
                         .deadlineAt(p.getDeadlineAt())
+                        .projectStart(p.getProjectStartDate())
+                        .projectEnd(p.getProjectEndDate())
                         .build())
                 .toList();
     }
