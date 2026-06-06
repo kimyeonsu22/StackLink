@@ -58,7 +58,6 @@ public class ProjectController {
         }
 
         return projectId;
-        return projectService.createProject(userId, request);
     }
 
     @GetMapping
