@@ -1,4 +1,4 @@
-// 오른쪽 핫한 프로젝트 (일단 더미 데이터 적용)
+// 오른쪽 핫한 프로젝트
 
 import { useNavigate } from 'react-router-dom';
 
