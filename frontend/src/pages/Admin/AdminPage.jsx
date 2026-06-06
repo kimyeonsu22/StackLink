@@ -115,16 +115,24 @@ const AdminPage = () => {
                     onClick={() => setSelectedProject(project)}
                     className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-purple-300 transition flex flex-col gap-2"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-semibold text-gray-900 text-sm">{project.projectName}</h3>
                       {project.isDeleted && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-500">삭제됨</span>
                       )}
                     </div>
-                    <div className="flex justify-between items-center text-xs text-gray-400">
+                    <div className="flex flex-wrap gap-1.5 text-xs">
                       <span className={`px-2 py-0.5 rounded-full text-white ${project.isClosed ? 'bg-gray-400' : 'bg-purple-600'}`}>
                         {project.isClosed ? '모집 완료' : '모집 중'}
                       </span>
+                      {project.projectCategory && (
+                        <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-600">{project.projectCategory}</span>
+                      )}
+                      {project.projectType && (
+                        <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{project.projectType}</span>
+                      )}
+                    </div>
+                    <div className="flex justify-end text-xs text-gray-400">
                       <span>{project.createdAt?.slice(0, 10)}</span>
                     </div>
                   </div>
@@ -233,9 +241,18 @@ const AdminPage = () => {
               <p><span className="font-semibold">공고명:</span> {selectedProject.projectName}</p>
               <p><span className="font-semibold">작성자:</span> {selectedProject.authorNickname}</p>
               <p><span className="font-semibold">상태:</span> {selectedProject.isClosed ? '모집 완료' : '모집 중'}</p>
+              {selectedProject.projectCategory && (
+                <p><span className="font-semibold">카테고리:</span> {selectedProject.projectCategory}</p>
+              )}
+              {selectedProject.projectType && (
+                <p><span className="font-semibold">유형:</span> {selectedProject.projectType}</p>
+              )}
               <p><span className="font-semibold">모집 인원:</span> {selectedProject.recruitCount}명</p>
               <p><span className="font-semibold">지원자 수:</span> {selectedProject.applyCount}명</p>
               <p><span className="font-semibold">마감일:</span> {selectedProject.deadlineAt?.slice(0, 10)}</p>
+              {selectedProject.projectStart && selectedProject.projectEnd && (
+                <p><span className="font-semibold">진행 기간:</span> {selectedProject.projectStart?.slice(0, 10)} ~ {selectedProject.projectEnd?.slice(0, 10)}</p>
+              )}
               <p><span className="font-semibold">조회수:</span> {selectedProject.viewCount}</p>
               <p><span className="font-semibold">좋아요:</span> {selectedProject.favoriteCount}</p>
             </div>
