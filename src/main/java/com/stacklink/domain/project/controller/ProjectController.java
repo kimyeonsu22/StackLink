@@ -4,14 +4,20 @@ import com.stacklink.domain.project.dto.ProjectCreateRequest;
 import com.stacklink.domain.project.dto.ProjectResponse;
 import com.stacklink.domain.project.dto.ProjectUpdateRequest;
 import com.stacklink.domain.project.entity.Project;
+import com.stacklink.domain.project.entity.ProjectTech;
+import com.stacklink.domain.project.entity.Tech;
 import com.stacklink.domain.project.service.ProjectService;
+import com.stacklink.domain.project.service.ProjectTechService;
+import com.stacklink.domain.project.service.TechService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +25,8 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TechService techService;
+    private final ProjectTechService projectTechService;
 
     @PostMapping
     public Long create(
@@ -26,6 +34,30 @@ public class ProjectController {
             @RequestBody ProjectCreateRequest request
     ) {
         Long userId = Long.valueOf(authentication.getName());
+        // 1. 기술 스택 이름을 통해 해당 기술 id 값 검색(select id from tech where tech_name = "JAVA" 등)
+        Map<String, String> techStack = request.getTechStack();
+        Object[] techKeySet = techStack.keySet().toArray(); // key 값 배열
+
+        Tech [] techs = new Tech[techKeySet.length]; // tech_name 을 통한 tech id 값 확보
+        for (int i = 0; i < techKeySet.length; i++) {
+            techs[i] = techService.findByTechName((String)techKeySet[i]).get();
+        }
+
+        System.out.println(Arrays.stream(techs).map(Tech::getId).toList()); // id 값 확인
+        // 2. 프로젝트 저장 및 프로젝트 id 값 반환
+        Long projectId = projectService.createProject(userId, request);
+
+        // 3. 기술 스택 id 값 리스트(기술 스택 여러개), 프로젝트 id 값 활용 project_tech 테이블에 데이터 저장
+        for (int i = 0; i < techs.length; i++) {
+            ProjectTech pt = ProjectTech.builder()
+                    .tech(techs[i])
+                    .project(Project.builder().id(projectId).build())
+                    .careerDetail(techStack.get(techKeySet[i]))
+                    .build();
+            projectTechService.insertProjectTech(pt);
+        }
+
+        return projectId;
         return projectService.createProject(userId, request);
     }
 

@@ -73,18 +73,19 @@ const ProjectCreatePage = () => {
       content : content,
       projectCategory : category,
       projectType : type,
-      recruitcount : recruitcount,
-      deadline : deadline,
-      projectStartDate : projectStartDate,
-      projectEndDate : projectEndDate,
+      recruitCount : parseInt(recruitcount, 10),
+      deadlineAt : new Date(deadline),
+      projectStartDate : new Date(projectStartDate),
+      projectEndDate : new Date(projectEndDate),
 
-      selectedTechs : selectedTechs,
+      techStack : selectedTechs,
     }
 
     if(projectname === '' || content === '' || category === '' || type === '' || recruitcount === '' || deadline === '' || projectStartDate === '' || projectEndDate === ''){
       alert("필수 값이 누락되었습니다.");
     } else {
-      fetch(`/api/projects/`, {
+      const userId = 1;
+      fetch(`/api/projects?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,10 +93,14 @@ const ProjectCreatePage = () => {
         body: JSON.stringify(formData),
       }).then((response) => {
         if (response.ok) {
-          console.log("요청 성공")
-        } else{
-          console.log("요청 실패")
+          // 성공 시 공고 목록 페이지로 돌아가기
+          alert("공고 작성이 완료되었습니다.");
+          navigate('/projects');
+        } else if (response.status === 409){
+          response.json().then(data => alert(data.message));
         }
+      }).catch((error) => {
+        console.error('Error:', error);
       })
     }
 

@@ -13,6 +13,7 @@ import com.stacklink.domain.project.repository.TechProjectsRepository;
 import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,13 @@ public class ProjectService {
             ProjectCreateRequest request
     ) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 없음"));
+
+        List<Project> projectList = projectRepository.findByAuthor_IdAndIsDeletedFalse(userId);
+
+        // 이미 작성한 공고가 존재할 경우
+        if (projectList.size() > 0) {
+          throw new DuplicateKeyException("이미 작성된 공고가 있을 경우 공고를 작성할 수 없습니다.");
+        }
 
         Project project = Project.builder()
                 .author(user)

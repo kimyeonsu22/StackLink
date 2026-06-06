@@ -22,7 +22,7 @@ public class Project {
 
     // 작성자(채용 회원)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User author;
 
     @Column(name = "projectname", nullable = false, length = 30)
