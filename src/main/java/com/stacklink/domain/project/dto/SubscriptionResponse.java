@@ -14,5 +14,5 @@ public class SubscriptionResponse {
     private String subName;
     private LocalDateTime startDate;
     private LocalDateTime finishDate;
-    private Boolean subState;
+    private boolean subState;
 }

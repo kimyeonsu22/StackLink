@@ -1,5 +1,6 @@
 package com.stacklink.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,4 +12,7 @@ public class TokenResponse {
     private String refreshToken;
     private String role;
     private String nickname;
+
+    @JsonProperty("isSubscribed")
+    private boolean isSubscribed;
 }
