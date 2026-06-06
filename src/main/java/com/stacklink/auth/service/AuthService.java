@@ -4,19 +4,19 @@ import com.stacklink.auth.dto.LoginRequest;
 import com.stacklink.auth.dto.SignupRequest;
 import com.stacklink.auth.dto.TokenResponse;
 import com.stacklink.auth.jwt.JwtTokenProvider;
-import com.stacklink.domain.project.entity.Role;
-import com.stacklink.domain.project.entity.User;
-import com.stacklink.domain.project.entity.Career;
-import com.stacklink.domain.project.entity.Tech;
-import com.stacklink.domain.project.entity.TechUsers;
+import com.stacklink.domain.project.dto.SubscriptionResponse;
+import com.stacklink.domain.project.entity.*;
 import com.stacklink.domain.project.repository.CareerRepository;
 import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.TechUsersRepository;
 import com.stacklink.domain.project.repository.UserRepository;
+import com.stacklink.domain.project.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,9 @@ public class AuthService {
     private final TechRepository techRepository;
     private final CareerRepository careerRepository;
     private final TechUsersRepository techUsersRepository;
+
+    // 회원 구독상태 확인 및 상태값 조회용
+    private final SubscriptionService subscriptionService;
 
     /**
      * 자체 회원가입 처리
@@ -98,8 +101,18 @@ public class AuthService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
+        // 구독 상태확인 -> @ExceptionHandler 보다 앞서 처리
+        // 로그인 시 구독 상태까지 함께 확인
+        SubscriptionResponse subState = null;
         String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRole().getKey());
         String refreshToken = tokenProvider.createRefreshToken(user.getId());
-        return new TokenResponse("Bearer", accessToken, refreshToken, user.getRole().getKey(), user.getNickname());
+
+        try {
+            subState = subscriptionService.getSubscription(user.getId());
+            return new TokenResponse("Bearer", accessToken, refreshToken, user.getRole().getKey(), user.getNickname(), subState.isSubState());
+        }
+        catch (RuntimeException e) {
+            return new TokenResponse("Bearer", accessToken, refreshToken, user.getRole().getKey(), user.getNickname(), false);
+        }
     }
 }

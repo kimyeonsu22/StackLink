@@ -2,21 +2,53 @@ import { useState } from 'react';
 import { FiZap } from 'react-icons/fi';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
-import { currentUser } from '../../data/dummy';
 
 const SubscriptionPage = () => {
   // TODO: 백엔드 구독 여부 확인 API 연동 후 교체
-  const [isSubscribed, setIsSubscribed] = useState(currentUser.isSubscribed);
+  const [isSubscribed, setIsSubscribed] = useState(localStorage.getItem('isSubscribed'));
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalType, setModalType] = useState(null); // 'subscribe' | 'cancel'
 
+  // 구독 신청 API 요청
   const handleConfirm = () => {
+
+
     if (modalType === 'subscribe') {
-      // TODO: 백엔드 구독 API 연동 필요
-      setIsSubscribed(true);
+      // 구독 신청
+      fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify({ subName: 'premium' })
+      }).then(response => {
+        if(response.ok) {
+          localStorage.setItem('isSubscribed', true);
+          setIsSubscribed(true);
+        } else {
+          response.json().then(data => {
+            alert(data.message);
+          })
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+      })
+
     } else {
-      // TODO: 백엔드 구독 취소 API 연동 필요
-      setIsSubscribed(false);
+      // 구독 취소
+      fetch('/api/subscriptions', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      }).then(response => {
+        if(response.ok) {
+          localStorage.setItem('isSubscribed', false);
+          setIsSubscribed(false);
+        }
+      })
     }
     setShowConfirmModal(false);
   };
@@ -47,7 +79,7 @@ const SubscriptionPage = () => {
               <p className="text-xs text-gray-400">/ 월</p>
             </div>
 
-            {isSubscribed ? (
+            {isSubscribed == true ? (
               <div className="w-full flex flex-col gap-3">
                 <span className="bg-purple-100 text-purple-600 text-sm font-semibold px-4 py-2 rounded-full">
                   현재 구독 중
