@@ -14,9 +14,17 @@ public class ProjectUpdateRequest {
 
     private String content;
 
+    private String projectCategory;
+
+    private String projectType;
+
     private Integer recruitCount;
 
     private LocalDateTime deadlineAt;
+
+    private LocalDateTime projectStartDate;
+
+    private LocalDateTime projectEndDate;
 
     private List<String> techNames;
 }

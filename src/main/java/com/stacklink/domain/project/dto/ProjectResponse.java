@@ -22,6 +22,10 @@ public class ProjectResponse {
 
     private String content;
 
+    private String projectCategory;
+
+    private String projectType;
+
     private Integer recruitCount;
 
     private Boolean isClosed;

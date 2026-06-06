@@ -13,6 +13,7 @@ import com.stacklink.domain.project.repository.TechProjectsRepository;
 import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +40,19 @@ public class ProjectService {
     ) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 없음"));
 
+        List<Project> projectList = projectRepository.findByAuthor_IdAndIsDeletedFalse(userId);
+
+        // 이미 작성한 공고가 존재할 경우
+        if (projectList.size() > 0) {
+          throw new DuplicateKeyException("이미 작성된 공고가 있을 경우 공고를 작성할 수 없습니다.");
+        }
+
         Project project = Project.builder()
                 .author(user)
                 .projectName(request.getProjectname())
                 .content(request.getContent())
+                .projectType(request.getProjectType())
+                .projectCategory(request.getProjectCategory())
                 .recruitCount(request.getRecruitCount())
                 .deadlineAt(request.getDeadlineAt())
                 .isClosed(false)
@@ -51,6 +61,8 @@ public class ProjectService {
                 .isDeleted(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .projectStartDate(request.getProjectStartDate())
+                .projectEndDate(request.getProjectEndDate())
                 .build();
 
         Project saved = projectRepository.save(project);
@@ -88,6 +100,8 @@ public class ProjectService {
                 .authorName(project.getAuthor().getNickname())
                 .projectname(project.getProjectName())
                 .content(project.getContent())
+                .projectType(project.getProjectType())
+                .projectCategory(project.getProjectCategory())
                 .recruitCount(project.getRecruitCount())
                 .isClosed(project.isClosed())
                 .viewCount(project.getViewCount())
@@ -140,8 +154,12 @@ public class ProjectService {
 
         project.setProjectName(request.getProjectname());
         project.setContent(request.getContent());
+        project.setProjectType(request.getProjectType());
+        project.setProjectCategory(request.getProjectCategory());
         project.setRecruitCount(request.getRecruitCount());
         project.setDeadlineAt(request.getDeadlineAt());
+        project.setProjectStartDate(request.getProjectStartDate());
+        project.setProjectEndDate(request.getProjectEndDate());
         project.setUpdatedAt(LocalDateTime.now());
 
         if (request.getTechNames() != null) {

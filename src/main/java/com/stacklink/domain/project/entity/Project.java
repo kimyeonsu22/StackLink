@@ -22,7 +22,7 @@ public class Project {
 
     // 작성자(채용 회원)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User author;
 
     @Column(name = "projectname", nullable = false, length = 30)
@@ -32,6 +32,12 @@ public class Project {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "project_category", nullable = false)
+    private String projectCategory;
+
+    @Column(name = "project_type", nullable = false)
+    private String projectType;
 
     @Column(name = "recruit_count", nullable = false)
     private int recruitCount;
@@ -53,6 +59,12 @@ public class Project {
 
     @Column(name = "deadline_at", nullable = false)
     private LocalDateTime deadlineAt;
+
+    @Column(name = "project_start", nullable = false)
+    private LocalDateTime projectStartDate;
+
+    @Column(name = "project_end", nullable = false)
+    private LocalDateTime projectEndDate;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
