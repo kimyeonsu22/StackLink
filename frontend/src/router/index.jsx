@@ -1,5 +1,5 @@
 // 라우터
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // 로그인, 회원가입
 import LoginPage from '../pages/Login/LoginPage';
@@ -52,6 +52,8 @@ const router = createBrowserRouter([
             { path: '/admin', element: <AdminPage /> },
         ]
     },
+
+    { path: '*', element: <Navigate to="/" replace /> },
 
 ]);
 
