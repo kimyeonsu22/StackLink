@@ -5,7 +5,7 @@ import Sidebar from '../../components/layout/Sidebar';
 
 const SubscriptionPage = () => {
   // TODO: 백엔드 구독 여부 확인 API 연동 후 교체
-  const [isSubscribed, setIsSubscribed] = useState(localStorage.getItem('isSubscribed'));
+  const [isSubscribed, setIsSubscribed] = useState(localStorage.getItem('isSubscribed') === 'true');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalType, setModalType] = useState(null); // 'subscribe' | 'cancel'
 
