@@ -14,7 +14,9 @@ import com.stacklink.domain.project.repository.TechRepository;
 import com.stacklink.domain.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,9 +119,17 @@ public class ProjectService {
 
     // 전체 조회
     @Transactional(readOnly = true)
-    public List<ProjectResponse> getProjects() {
+    public List<ProjectResponse> getProjects(String keyword) {
 
-        return projectRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
+        List<Project> projects;
+
+        if(keyword == null || keyword.isBlank()){
+            projects = projectRepository.findByIsDeletedFalseOrderByCreatedAtDesc();
+        } else{
+            projects = projectRepository.searchProjects(keyword);
+        }
+
+        return projects
                 .stream()
                 .map(p -> {
                     List<String> tags = techProjectsRepository.findByProject_Id(p.getId())

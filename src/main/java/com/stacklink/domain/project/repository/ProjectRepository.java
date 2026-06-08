@@ -57,4 +57,19 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         ORDER BY (p.favoriteCount * 2 + COUNT(pa) * 8) DESC
 """)
     Page<Project> findHotProjects(Pageable pageable);
+
+    @Query("""
+    SELECT DISTINCT p
+    FROM Project p
+    LEFT JOIN p.techProjects pt
+    LEFT JOIN pt.tech t
+    WHERE(
+        LOWER(p.projectName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(t.techName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    )
+    AND p.isClosed = false 
+    AND p.isDeleted = false
+""")
+    List<Project> searchProjects(@Param("keyword") String keyword);
 }

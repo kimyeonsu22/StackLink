@@ -1,7 +1,7 @@
 // 프로젝트 리스트 화면
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import ProjectListCard from '../../components/project/ProjectListCard';
@@ -21,9 +21,13 @@ const ProjectListPage = () => {
   const [aiProjects, setAiProjects] = useState([]);
   const [aiLoading, setAiLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');
 
   useEffect(() => {
-    getProjects().then((res) => setProjects(res.data));
+    getProjects(keyword)
+        .then((res) => setProjects(res.data))
+        .catch(console.error);
 
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -47,7 +51,7 @@ const ProjectListPage = () => {
         }
       }).catch(() => {});
     }
-  }, []);
+  }, [keyword]);
 
   const totalPages = Math.ceil(projects.length / PAGE_SIZE);
   const currentProjects = projects.slice(
