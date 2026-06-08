@@ -31,8 +31,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 구글_CLIENT_ID_여기에
-            client-secret: 구글_CLIENT_SECRET_여기에
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
           kakao:
             client-id: 카카오_CLIENT_ID_여기에
@@ -77,10 +77,6 @@ logging:
 
 openai:
   api:
-    key: ${OPEN_AI_KEY}
+    key: ${OPENAI_API_KEY}
     url: https://api.openai.com/v1/chat/completions
     model: gpt-4o-mini
-
-admin:
-  email: admin@stacklink.com
-  password: admin1234

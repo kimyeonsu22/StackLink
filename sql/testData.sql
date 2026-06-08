@@ -33,22 +33,21 @@ INSERT INTO career (career_detail) VALUES
 
 -- ===== subscribe (구독 플랜) =====
 INSERT INTO subscribe (sub_name, sub_price_month) VALUES
-('FREE', 0),
-('PRO', 9900);
+('premium', 9900);
 
 -- ===== users =====
 -- 공통 비밀번호: Test1234!
 INSERT INTO users (username, password, nickname, email, phone_number, role, position, created_at, updated_at, is_deleted) VALUES
 ('관리자',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '관리자', 'admin@stacklink.com',       '010-0000-0000', 'ADMIN',     '관리자',     NOW(), NOW(), false),
-('김민우',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '김민우', 'kimminwoo@stacklink.com',   '010-1234-5678', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
-('이수연',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '이수연', 'leesuyeon@stacklink.com',   '010-2345-6789', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
-('박지훈',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '박지훈', 'parkjihun@stacklink.com',   '010-3456-7890', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
-('최준혁',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '최준혁', 'choijunhyuk@stacklink.com', '010-4567-1234', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
-('윤서아',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '윤서아', 'yunseoah@stacklink.com',    '010-5678-2345', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
-('정민준',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '정민준', 'jungminjun@stacklink.com',  '010-6789-3456', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
-('한지은',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '한지은', 'hanjieun@stacklink.com',    '010-7890-4567', 'APPLICANT', 'PM',         NOW(), NOW(), false),
-('송태양',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '송태양', 'songtaeyang@stacklink.com', '010-8901-5678', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
-('오다은',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', '오다은', 'odaeun@stacklink.com',      '010-9012-6789', 'APPLICANT', 'DB',         NOW(), NOW(), false);
+('김민우',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test1', 'test1@stacklink.com',   '010-1234-5678', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
+('이수연',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test2', 'test2@stacklink.com',   '010-2345-6789', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
+('박지훈',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test3', 'test3@stacklink.com',   '010-3456-7890', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
+('최준혁',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test4', 'test4@stacklink.com', '010-4567-1234', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
+('윤서아',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test5', 'test5@stacklink.com',    '010-5678-2345', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
+('정민준',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test6', 'test6@stacklink.com',  '010-6789-3456', 'APPLICANT', '백엔드',     NOW(), NOW(), false),
+('한지은',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test7', 'test7@stacklink.com',    '010-7890-4567', 'APPLICANT', 'PM',         NOW(), NOW(), false),
+('송태양',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test8', 'test8@stacklink.com', '010-8901-5678', 'APPLICANT', '프론트엔드', NOW(), NOW(), false),
+('오다은',  '$2b$10$VFJNF62xTiMFblHZw0OpguSCUuyKDSntCEdhEpzIY9gGAGPP0i80e', 'test9', 'test9@stacklink.com',      '010-9012-6789', 'APPLICANT', 'DB',         NOW(), NOW(), false);
 
 -- ===== tech_users (회원 기술스택) =====
 -- 김민우(2): Spring Boot(2)-3년이상~5년미만(3), JAVA(1)-3년이상~5년미만(3), JPA(4)-1년이상~3년미만(2)
@@ -154,12 +153,12 @@ INSERT INTO project_tech (tech_id, project_id, career_detail) VALUES
 (6, 9, '5년 이상 ~ 7년 미만'), (7, 9, '3년 이상 ~ 5년 미만'), (5, 9, '1년 이상 ~ 3년 미만');
 
 -- ===== sub_state (구독 상태) =====
--- subscribe: FREE(1), PRO(2)
--- 김민우(2), 이수연(3), 박지훈(4) PRO 구독 중
+-- subscribe: premium(1)
+-- 김민우(2), 이수연(3), 박지훈(4) premium 구독 중
 INSERT INTO sub_state (user_id, sub_id, start_date, finish_date, sub_state) VALUES
-(2, 2, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true),
-(3, 2, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true),
-(4, 2, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true);
+(2, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true),
+(3, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true),
+(4, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), true);
 
 -- ===== project_apply (지원 데이터) =====
 -- project 1 (김민우 작성): 나머지 유저 전원 APPLIED
