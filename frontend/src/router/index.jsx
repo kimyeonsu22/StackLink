@@ -1,5 +1,5 @@
 // 라우터
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // 로그인, 회원가입
 import LoginPage from '../pages/Login/LoginPage';
@@ -26,10 +26,13 @@ import UserRoute from './UserRoute';
 // 구독
 import SubscriptionPage from '../pages/Subscription/SubscriptionPage';
 
+// OAuth 연동
+import OAuthCallback from '../pages/Login/OAuthCallback';
+
 const router = createBrowserRouter([
     { path: '/login', element: <LoginPage /> },
     { path: '/register', element: <RegisterPage /> },
-
+    { path: '/oauth/callback', element: <OAuthCallback /> },
     {
         element: <UserRoute />,
         children: [
@@ -52,6 +55,8 @@ const router = createBrowserRouter([
             { path: '/admin', element: <AdminPage /> },
         ]
     },
+
+    { path: '*', element: <Navigate to="/" replace /> },
 
 ]);
 

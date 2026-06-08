@@ -17,7 +17,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JwtTokenProvider tokenProvider;
 
-    /** 소셜 로그인 성공 시 JWT를 발급하고 프론트엔드 콜백 URL로 토큰과 함께 리다이렉트 */
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -27,14 +27,20 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Long userId = principal.getUser().getId();
         String role = principal.getUser().getRole().getKey();
 
+        // User 엔티티에서 닉네임을 가져옵니다 (메서드명은 실제 구현에 맞게 수정 필요)
+        String nickname = principal.getUser().getNickname();
+
         String accessToken = tokenProvider.createAccessToken(userId, role);
         String refreshToken = tokenProvider.createRefreshToken(userId);
 
-        // 프론트엔드(React)의 콜백 페이지로 토큰 전달
+        // 프론트엔드에서 기대하는 4가지 파라미터를 모두 담아서 전달
         String redirectUrl = String.format(
-                "http://localhost:3000/oauth/callback?accessToken=%s&refreshToken=%s",
+                "http://localhost:3000/oauth/callback?accessToken=%s&refreshToken=%s&role=%s&nickname=%s",
                 URLEncoder.encode(accessToken, StandardCharsets.UTF_8),
-                URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
+                URLEncoder.encode(refreshToken, StandardCharsets.UTF_8),
+                URLEncoder.encode(role, StandardCharsets.UTF_8),
+                URLEncoder.encode(nickname, StandardCharsets.UTF_8)
+        );
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }

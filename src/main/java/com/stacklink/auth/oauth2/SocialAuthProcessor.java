@@ -32,7 +32,8 @@ public class SocialAuthProcessor {
         Optional<Social> linked =
                 socialRepository.findByPlatformAndPlatformId(platform, info.getProviderId());
         if (linked.isPresent()) {
-            return linked.get().getUser();
+            Long userId = linked.get().getUser().getId();
+            return userRepository.findById(userId).orElseThrow();
         }
 
         if (info.getEmail() != null) {
