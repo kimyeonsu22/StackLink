@@ -10,6 +10,8 @@ import com.stacklink.domain.project.service.ProjectService;
 import com.stacklink.domain.project.service.ProjectTechService;
 import com.stacklink.domain.project.service.TechService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +63,11 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<ProjectResponse> getProjects() {
-        return projectService.getProjects();
+    public List<ProjectResponse> getProjects(
+            @RequestParam(required = false) String keyword
+    ) {
+        System.out.println("keyword = " + keyword);
+        return projectService.getProjects(keyword);
     }
 
     @GetMapping("/{projectId}")

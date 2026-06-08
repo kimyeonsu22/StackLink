@@ -79,4 +79,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectApply> applies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<TechProjects> techProjects = new ArrayList<>();
 }
