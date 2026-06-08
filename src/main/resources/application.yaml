@@ -82,7 +82,6 @@ openai:
     url: https://api.openai.com/v1/chat/completions
     model: gpt-4o-mini
 
-#관리자 계정
 admin:
-  email: ${ADMIN_EMAIL:admin@test.com}
-  password: ${ADMIN_PASSWORD:admin1234}
+  email: admin@stacklink.com
+  password: Test1234!
