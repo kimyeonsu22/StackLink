@@ -16,3 +16,10 @@ export const checkEmail = (email) =>
 export const checkNickname = (nickname) =>
     api.get('/auth/check-nickname', { params: { nickname } });
 
+// 로그아웃
+export const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nickname');
+};

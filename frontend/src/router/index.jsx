@@ -26,10 +26,13 @@ import UserRoute from './UserRoute';
 // 구독
 import SubscriptionPage from '../pages/Subscription/SubscriptionPage';
 
+// OAuth 연동
+import OAuthCallback from '../pages/Login/OAuthCallback';
+
 const router = createBrowserRouter([
     { path: '/login', element: <LoginPage /> },
     { path: '/register', element: <RegisterPage /> },
-
+    { path: '/oauth/callback', element: <OAuthCallback /> },
     {
         element: <UserRoute />,
         children: [

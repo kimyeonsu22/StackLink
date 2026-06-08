@@ -6,9 +6,9 @@ spring:
     name: StackLink
 
   datasource:
-    url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&serverAffinityOrder=users
+    url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: ${DB_PASSWORD}
+    password: "0000"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -31,8 +31,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 구글_CLIENT_ID_여기에
-            client-secret: 구글_CLIENT_SECRET_여기에
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
           kakao:
             client-id: 카카오_CLIENT_ID_여기에
