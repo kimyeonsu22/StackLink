@@ -6,9 +6,9 @@ spring:
     name: StackLink
 
   datasource:
-    url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/stacklink?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&serverAffinityOrder=users
     username: root
-    password: "0000"
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -67,6 +67,7 @@ jwt:
 
 logging:
   level:
+    
     org:
       hibernate:
         SQL: DEBUG
@@ -77,6 +78,11 @@ logging:
 
 openai:
   api:
-    key: ${OPENAI_API_KEY}
+    key: ${OPENAI_API_KEY:default_key}
     url: https://api.openai.com/v1/chat/completions
     model: gpt-4o-mini
+
+#관리자 계정
+admin:
+  email: ${ADMIN_EMAIL:admin@test.com}
+  password: ${ADMIN_PASSWORD:admin1234}
