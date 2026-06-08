@@ -1,8 +1,10 @@
 import api from './axios';
 
 // 공고 목록 조회
-export const getProjects = () =>
-    api.get('/projects');
+export const getProjects = (keyword) =>
+    api.get('/projects', {
+        params: keyword ? {keyword} : {}
+    });
 
 // 공고 단건 조회
 export const getProject = (projectId) =>
